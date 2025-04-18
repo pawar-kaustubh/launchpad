@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar";
 import SignUp from "./pages/SignUp";
 import ExploreStartUp from "./pages/ExploreStartUp";
 import StartUpDetails from "./pages/StartupDetails";
+import StartUpForm from "./pages/StartUpForm";
 
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/explorestartups" element={<ExploreStartUp />} />
         <Route path="/startupdetails" element={<StartUpDetails />} />
+        <Route path="/startupform" element={<StartUpForm />} />
       </Routes>
 
       </>
