@@ -1,14 +1,52 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 const SignIn = () => {
-  return (
+  const [formData, setFormData] = React.useState({});
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      
+      setLoading(true);
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        setLoading(false); 
+        setError(data.message);
+        return;
+      }
+      setLoading(false);
+      setError(null)
+      navigate('/')
+    } catch (error) {
+      setLoading(false)
+      setError(error.message)
+    }
+  };
+  
+
+  return (
     <StyledWrapper>
       <div className="container">
         <div className="heading">Sign In</div>
-        <form className="form" >
+        <form className="form" onSubmit={handleSubmit}>
           <input
             placeholder="E-mail"
             id="email"
@@ -16,6 +54,7 @@ const SignIn = () => {
             type="email"
             className="input"
             required
+            onChange={handleChange}
           />
           <input
             placeholder="Password"
@@ -24,11 +63,15 @@ const SignIn = () => {
             type="password"
             className="input"
             required
+            onChange={handleChange}
           />
+         
           <span className="forgot-password">
             <a href="#">Forgot Password ?</a>
           </span>
-          <button type="submit" value="Sign In" className="login-button" />
+          <button disabled={loading} type="submit" value="Sign Up" className="login-button" >
+            {loading ? "Loading..." : "Sign In"}
+          </button>
         </form>
         <div className="social-account-container">
           <span className="title">Or Sign in with</span>
@@ -43,15 +86,15 @@ const SignIn = () => {
                 <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
               </svg>
             </button>
-           
           </div>
         </div>
+        <div>
         <span className="agreement">
-          <p>Don't have an account?</p>
+          <p>Don't have an account</p>
           <Link to={"/signup"}>Sign Up</Link>
-          
-       
         </span>
+        </div>
+        {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
       </div>
     </StyledWrapper>
   );
@@ -219,4 +262,3 @@ const StyledWrapper = styled.div`
 `;
 
 export default SignIn;
-
