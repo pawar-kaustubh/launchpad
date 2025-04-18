@@ -6,7 +6,7 @@ import SignIn from "./pages/SignIn";
 import Navbar from "./components/Navbar";
 import SignUp from "./pages/SignUp";
 import ExploreStartUp from "./pages/ExploreStartUp";
-import StartUpDetails from "./pages/StartupDetails";
+import StartUpDetails from "./pages/StartUpDetails";
 
 
 export default function App() {
