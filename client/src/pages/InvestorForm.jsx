@@ -1,52 +1,88 @@
 import React, { useState, useEffect } from "react";
 
-const StartUpForm = () => {
+const InvestorForm = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [formData, setFormData] = useState({
     username: "",
-    startupname: "",
-    startupdesc: "",
+    fullname: "",
     email: "",
+    phone: "",
     country: "",
     location: "",
+    linkedin: "",
+    investmentType: "",
+    industryInterest: [],
+    ticketSize: "",
+    minInvestment: "",
+    fundingStageInterest: [],
+    portfolio: "",
+    about: "",
     website: "",
-    phone: "",
-    industry: "",
-    socials: "",
-    team: "",
-    totalsales: "",
-    revenue: "",
-    profit: "",
-    loss: "",
-    valuation: "",
-    equity: "",
-    pitchdeck: "",
-    burnrate: "",
-    runway: "",
-    youtube: "",
-    logo: null,
-    coverImage: null,
+    preferredEquityRange: "",
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [progress, setProgress] = useState(0);
 
+  // Industry options
+  const industryOptions = [
+    "Technology",
+    "Healthcare",
+    "Fintech",
+    "E-commerce",
+    "Education",
+    "Artificial Intelligence",
+    "Blockchain",
+    "Clean Energy",
+    "Biotech",
+    "Consumer Goods",
+    "Real Estate",
+    "Entertainment",
+  ];
+
+  // Funding stage options
+  const fundingStageOptions = [
+    "Pre-Seed",
+    "Seed",
+    "Series A",
+    "Series B",
+    "Series C+",
+    "Growth Stage",
+  ];
+
+  // Investment type options
+  const investmentTypeOptions = [
+    "Angel Investor",
+    "Venture Capital",
+    "Private Equity",
+    "Corporate Investor",
+    "Family Office",
+    "Accelerator",
+  ];
+
   // Calculate progress based on filled fields
   useEffect(() => {
-    const totalFields = Object.keys(formData).length;
-    const filledFields = Object.values(formData).filter(
-      (value) => value !== "" && value !== null
-    ).length;
+    const totalFields = Object.keys(formData).length - 2; // Exclude arrays from count
+    const filledFields = Object.entries(formData).filter(([key, value]) => {
+      if (Array.isArray(value)) return value.length > 0;
+      return value !== "" && value !== null;
+    }).length;
     setProgress(Math.round((filledFields / totalFields) * 100));
   }, [formData]);
 
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
+    const { name, value, type } = e.target;
+    
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "file" ? files[0] : value,
+      [name]: type === "checkbox" ? 
+        (e.target.checked 
+          ? [...prev[name], value] 
+          : prev[name].filter(item => item !== value))
+        : value,
     }));
+    
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
@@ -56,30 +92,20 @@ const StartUpForm = () => {
 
     const requiredFields = [
       "username",
-      "startupname",
-      "startupdesc",
+      "fullname",
       "email",
+      "phone",
       "country",
       "location",
-      "website",
-      "phone",
-      "industry",
-      "socials",
-      "team",
-      "totalsales",
-      "revenue",
-      "profit",
-      "loss",
-      "valuation",
-      "equity",
-      "pitchdeck",
-      "burnrate",
-      "runway",
-      "youtube",
+      "linkedin",
+      "investmentType",
+      "ticketSize",
+      "minInvestment",
+      "about",
     ];
 
     requiredFields.forEach((field) => {
-      if (!formData[field]) {
+      if (!formData[field] || (Array.isArray(formData[field]) && formData[field].length === 0)) {
         newErrors[field] = "This field is required";
         isValid = false;
       }
@@ -92,6 +118,11 @@ const StartUpForm = () => {
 
     if (formData.phone && !/^\d+$/.test(formData.phone)) {
       newErrors.phone = "Invalid phone number";
+      isValid = false;
+    }
+
+    if (formData.linkedin && !formData.linkedin.includes("linkedin.com")) {
+      newErrors.linkedin = "Please enter a valid LinkedIn URL";
       isValid = false;
     }
 
@@ -120,68 +151,72 @@ const StartUpForm = () => {
 
   const formSections = [
     {
-      title: "Basic Information",
-      icon: "📝",
+      title: "Basic Info",
+      icon: "👤",
       fields: [
         { label: "Username", type: "text", name: "username", placeholder: "Your unique identifier" },
-        { label: "Startup Name", type: "text", name: "startupname", placeholder: "What's your venture called?" },
-        { label: "Brief Description", type: "textarea", name: "startupdesc", placeholder: "Describe your startup in 1-2 sentences" },
-        { label: "Email Address", type: "email", name: "email", placeholder: "contact@yourstartup.com" },
+        { label: "Full Name", type: "text", name: "fullname", placeholder: "Your full legal name" },
+        { label: "Email Address", type: "email", name: "email", placeholder: "your@email.com" },
+        { label: "Phone Number", type: "tel", name: "phone", placeholder: "1234567890" },
         { label: "Country", type: "text", name: "country", placeholder: "Where are you based?" },
         { label: "Location", type: "text", name: "location", placeholder: "City, State/Region" },
-        { label: "Website", type: "url", name: "website", placeholder: "https://yourstartup.com" },
-        { label: "Phone Number", type: "tel", name: "phone", placeholder: "1234567890" },
-        { label: "Industry", type: "text", name: "industry", placeholder: "E.g., Fintech, HealthTech, SaaS" },
-        { label: "Social Media Links", type: "url", name: "socials", placeholder: "LinkedIn, Twitter, etc." },
+        { label: "LinkedIn Profile", type: "url", name: "linkedin", placeholder: "https://linkedin.com/in/yourprofile" },
+        { label: "Personal Website", type: "url", name: "website", placeholder: "https://yourwebsite.com", required: false },
       ],
     },
     {
-      title: "Team Details",
-      icon: "👥",
-      fields: [
-        { label: "Team Overview", type: "textarea", name: "team", placeholder: "Tell us about your team members and their roles" },
-      ],
-    },
-    {
-      title: "Financial Metrics",
+      title: "Investment Profile",
       icon: "💰",
       fields: [
-        { label: "Total Sales", type: "number", name: "totalsales", placeholder: "Total sales to date" },
-        { label: "Annual Revenue", type: "number", name: "revenue", placeholder: "Last 12 months revenue" },
-        { label: "Profit", type: "number", name: "profit", placeholder: "Net profit" },
-        { label: "Loss", type: "number", name: "loss", placeholder: "Net loss (if applicable)" },
-        { label: "Valuation", type: "number", name: "valuation", placeholder: "Current valuation" },
-        { label: "Equity (%)", type: "number", name: "equity", placeholder: "Equity available" },
-        { label: "Burn Rate", type: "number", name: "burnrate", placeholder: "Monthly expenses" },
-        { label: "Runway (Months)", type: "number", name: "runway", placeholder: "Months of operation left" },
+        { 
+          label: "Investment Type", 
+          type: "select", 
+          name: "investmentType", 
+          options: investmentTypeOptions 
+        },
+        { 
+          label: "Industries of Interest", 
+          type: "checkbox-group", 
+          name: "industryInterest", 
+          options: industryOptions,
+          description: "Select all that apply"
+        },
+        { 
+          label: "Preferred Funding Stages", 
+          type: "checkbox-group", 
+          name: "fundingStageInterest", 
+          options: fundingStageOptions,
+          description: "Select all that apply"
+        },
+        { label: "Typical Ticket Size ($)", type: "number", name: "ticketSize", placeholder: "Maximum investment amount" },
+        { label: "Minimum Investment ($)", type: "number", name: "minInvestment", placeholder: "Minimum investment amount" },
+        { label: "Preferred Equity Range", type: "text", name: "preferredEquityRange", placeholder: "e.g., 5% - 15%", required: false },
       ],
     },
     {
-      title: "Media & Documents",
-      icon: "📷",
+      title: "About You",
+      icon: "📝",
       fields: [
-        { label: "Link to Pitch Deck", type: "url", name: "pitchdeck", placeholder: "Link to your investor deck" },
-        { label: "YouTube Video Link", type: "url", name: "youtube", placeholder: "Demo or explainer video" },
-        { label: "Startup Logo", type: "file", name: "logo", accept: "image/*" },
-        { label: "Cover Image", type: "file", name: "coverImage", accept: "image/*" },
+        { label: "About You", type: "textarea", name: "about", placeholder: "Tell us about your investment philosophy and experience" },
+        { label: "Portfolio Companies", type: "textarea", name: "portfolio", placeholder: "List companies you've invested in (names or URLs)", required: false },
       ],
     },
   ];
 
   if (submitSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 to-green-100 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-white rounded-xl shadow-lg overflow-hidden text-center p-8">
           <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
             <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="mt-3 text-2xl font-bold text-gray-900">Submission Successful!</h2>
-          <p className="mt-2 text-gray-600">Thank you for sharing your startup details with us. We'll review your information and get back to you soon.</p>
+          <h2 className="mt-3 text-2xl font-bold text-gray-900">Registration Complete!</h2>
+          <p className="mt-2 text-gray-600">Thank you for joining our investor network. We'll match you with relevant startup opportunities.</p>
           <button
             onClick={() => setSubmitSuccess(false)}
-            className="mt-5 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="mt-5 inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             Back to Form
           </button>
@@ -191,22 +226,22 @@ const StartUpForm = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
         {/* Header with progress */}
-        <div className="bg-gradient-to-r from-purple-500 to-blue-600 py-6 px-6 relative">
-          <div className="absolute top-0 left-0 h-1 bg-purple-300" style={{ width: `${progress}%` }}></div>
+        <div className="bg-gradient-to-r from-blue-500 to-green-600 py-6 px-6 relative">
+          <div className="absolute top-0 left-0 h-1 bg-blue-300" style={{ width: `${progress}%` }}></div>
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-white tracking-tight">
-                🚀 Share Your Startup Story
+                🏦 Join Our Investor Network
               </h1>
-              <p className="mt-2 text-purple-100">
+              <p className="mt-2 text-blue-100">
                 {progress < 50 
-                  ? "Let's get started! Every great journey begins with a single step." 
+                  ? "Let's get to know you! Complete your profile to access startups." 
                   : progress < 80 
-                    ? "You're doing great! Keep going!" 
-                    : "Almost there! Just a few more details."}
+                    ? "Great progress! Investors like you drive innovation." 
+                    : "Almost done! Your profile will be active shortly."}
               </p>
             </div>
             <div className="mt-4 sm:mt-0 bg-white bg-opacity-20 rounded-full px-4 py-2">
@@ -222,7 +257,7 @@ const StartUpForm = () => {
           </label>
           <select
             id="tabs"
-            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+            className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
             value={activeTab}
             onChange={(e) => setActiveTab(parseInt(e.target.value))}
           >
@@ -241,8 +276,8 @@ const StartUpForm = () => {
                 onClick={() => setActiveTab(index)}
                 className={`flex-1 py-4 px-4 text-center text-sm font-medium transition-all duration-200 ${
                   activeTab === index
-                    ? "bg-white text-indigo-600 border-t-2 border-indigo-500 shadow-sm"
-                    : "text-gray-500 hover:text-indigo-500 hover:bg-white hover:bg-opacity-50"
+                    ? "bg-white text-blue-600 border-t-2 border-blue-500 shadow-sm"
+                    : "text-gray-500 hover:text-blue-500 hover:bg-white hover:bg-opacity-50"
                 }`}
               >
                 <span className="block text-lg mb-1">{section.icon}</span>
@@ -264,52 +299,76 @@ const StartUpForm = () => {
               {formSections[activeTab].fields.map((field) => (
                 <div 
                   key={field.name} 
-                  className={field.type === "textarea" || field.type === "file" ? "sm:col-span-2" : ""}
+                  className={
+                    field.type === "textarea" || 
+                    field.type === "checkbox-group" ? "sm:col-span-2" : ""
+                  }
                 >
                   <label
                     htmlFor={field.name}
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
                     {field.label}
-                    <span className="text-red-500 ml-1">{errors[field.name] ? '*' : ''}</span>
+                    {!field.required && <span className="text-gray-500 ml-1">(optional)</span>}
+                    {errors[field.name] && <span className="text-red-500 ml-1">*</span>}
                   </label>
+                  
+                  {field.description && (
+                    <p className="text-xs text-gray-500 mb-2">{field.description}</p>
+                  )}
+
                   {field.type === "textarea" ? (
                     <textarea
                       id={field.name}
                       name={field.name}
                       rows={4}
-                      className={`shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border ${
+                      className={`shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border ${
                         errors[field.name] ? "border-red-300" : "border-gray-300"
                       } rounded-md transition duration-150 ease-in-out`}
                       value={formData[field.name] || ""}
                       onChange={handleChange}
                       placeholder={field.placeholder}
                     />
-                  ) : field.type === "file" ? (
-                    <div className="mt-1 flex items-center">
-                      <label className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Choose File
-                        <input
-                          type="file"
-                          id={field.name}
-                          name={field.name}
-                          className="sr-only"
-                          onChange={handleChange}
-                          accept={field.accept}
-                        />
-                      </label>
-                      <span className="ml-3 text-sm text-gray-500 truncate max-w-xs">
-                        {formData[field.name] 
-                          ? formData[field.name].name || "File selected" 
-                          : "No file chosen"}
-                      </span>
+                  ) : field.type === "select" ? (
+                    <select
+                      id={field.name}
+                      name={field.name}
+                      className={`shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border ${
+                        errors[field.name] ? "border-red-300" : "border-gray-300"
+                      } rounded-md py-2 px-3 transition duration-150 ease-in-out`}
+                      value={formData[field.name] || ""}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select an option</option>
+                      {field.options.map((option, i) => (
+                        <option key={i} value={option}>{option}</option>
+                      ))}
+                    </select>
+                  ) : field.type === "checkbox-group" ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-2">
+                      {field.options.map((option, i) => (
+                        <div key={i} className="flex items-center">
+                          <input
+                            id={`${field.name}-${i}`}
+                            name={field.name}
+                            type="checkbox"
+                            value={option}
+                            checked={formData[field.name].includes(option)}
+                            onChange={handleChange}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          />
+                          <label htmlFor={`${field.name}-${i}`} className="ml-2 block text-sm text-gray-700">
+                            {option}
+                          </label>
+                        </div>
+                      ))}
                     </div>
                   ) : (
                     <input
                       type={field.type}
                       id={field.name}
                       name={field.name}
-                      className={`shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border ${
+                      className={`shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border ${
                         errors[field.name] ? "border-red-300" : "border-gray-300"
                       } rounded-md py-2 px-3 transition duration-150 ease-in-out`}
                       value={formData[field.name] || ""}
@@ -329,7 +388,7 @@ const StartUpForm = () => {
               <button
                 type="button"
                 onClick={() => setActiveTab((prev) => Math.max(0, prev - 1))}
-                className={`inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200 ${
+                className={`inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 ${
                   activeTab === 0 ? "opacity-50 cursor-not-allowed" : ""
                 }`}
                 disabled={activeTab === 0}
@@ -348,7 +407,7 @@ const StartUpForm = () => {
                 <button
                   type="button"
                   onClick={() => setActiveTab((prev) => Math.min(formSections.length - 1, prev + 1))}
-                  className="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-200"
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent shadow-sm text-sm font-medium rounded-md text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
                 >
                   Next
                   <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -370,7 +429,7 @@ const StartUpForm = () => {
                       Processing...
                     </>
                   ) : (
-                    "Submit Startup Info"
+                    "Complete Registration"
                   )}
                 </button>
               )}
@@ -381,10 +440,10 @@ const StartUpForm = () => {
       
       {/* Help text */}
       <div className="mt-6 text-center text-sm text-gray-500">
-        <p>Need help? <a href="#" className="text-indigo-600 hover:text-indigo-500">Contact our support team</a></p>
+        <p>Need help? <a href="#" className="text-blue-600 hover:text-blue-500">Contact our investor relations team</a></p>
       </div>
     </div>
   );
 };
 
-export default StartUpForm;
+export default InvestorForm;
