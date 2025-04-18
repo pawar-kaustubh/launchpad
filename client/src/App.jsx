@@ -6,6 +6,7 @@ import SignIn from "./pages/SignIn";
 
 import Navbar from "./components/Navbar";
 import SignUp from "./pages/SignUp";
+import ExploreStartUp from "./pages/ExploreStartUp";
 
 
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/explorestartups" element={<ExploreStartUp />} />
       </Routes>
 
       </>
