@@ -3,19 +3,22 @@ import {  Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Layout from "./Layout";
 import SignIn from "./pages/SignIn";
-import Card from "./components/Card";
+
+import Navbar from "./components/Navbar";
+import SignUp from "./pages/SignUp";
+
 
 export default function App() {
   return (
-  
+  <>
+  <Navbar/>
       <Routes>
-         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="/signup" element={<SignIn />} />
-          <Route path="/card" element={<Card />} />
-        </Route>
 
+        <Route path="/" element={<Home />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
-  
+
+      </>
   );
 }

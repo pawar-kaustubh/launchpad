@@ -1,1 +1,10 @@
+
+
 @import "tailwindcss";
+/* src/index.css */
+
+
+.clip-path-wave {
+    clip-path: ellipse(100% 60% at 50% 0%);
+    transform: translateY(100%);
+  }
