@@ -1,13 +1,21 @@
 import React from "react";
-import styled from "styled-components";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
-const SignIn = () => {
+const SignUp = () => {
   return (
     <StyledWrapper>
       <div className="container">
-        <div className="heading">Sign In</div>
+        <div className="heading">Sign Up</div>
         <form className="form" action>
+            <input
+              placeholder="username"
+              id="email"
+              name="username"
+              type="text"
+              className="input"
+              required
+            />
           <input
             placeholder="E-mail"
             id="email"
@@ -27,7 +35,11 @@ const SignIn = () => {
           <span className="forgot-password">
             <a href="#">Forgot Password ?</a>
           </span>
-          <input type="submit" value="Sign In" className="login-button" />
+          <input
+            defaultValue="Sign In"
+            type="submit"
+            className="login-button"
+          />
         </form>
         <div className="social-account-container">
           <span className="title">Or Sign in with</span>
@@ -46,8 +58,8 @@ const SignIn = () => {
           </div>
         </div>
         <span className="agreement">
-          <p>Don't have an account?</p>
-          <Link to={"/signup"}>Sign Up</Link>
+          <p>Already have an account</p>
+          <Link to={"/signin"}>Sign In</Link>
           
        
         </span>
@@ -217,4 +229,4 @@ const StyledWrapper = styled.div`
   }
 `;
 
-export default SignIn;
+export default SignUp;
