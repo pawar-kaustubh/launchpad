@@ -1,29 +1,72 @@
 // src/pages/Home.jsx
 import NavbarComponent from '../components/Navbar';
+import { useState, useEffect } from 'react';
 
 const Home = () => {
+  const [displayText, setDisplayText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [textIndex, setTextIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const typingSpeed = 150; // Speed of typing (ms per character)
+  const deletingSpeed = 100; // Speed of deleting (ms per character)
+  const pauseDuration = 2000; // Pause between cycles (ms)
+
+  const phrases = [
+    'Pitch to Mentors',
+    'Launch Your Startup Dreams',
+    'Connect with Investors',
+  ];
+
+  useEffect(() => {
+    const handleTyping = () => {
+      const currentPhrase = phrases[textIndex];
+      if (!isDeleting) {
+        if (charIndex < currentPhrase.length) {
+          setDisplayText(currentPhrase.substring(0, charIndex + 1));
+          setCharIndex(charIndex + 1);
+        } else {
+          setTimeout(() => setIsDeleting(true), pauseDuration);
+        }
+      } else {
+        if (charIndex > 0) {
+          setDisplayText(currentPhrase.substring(0, charIndex - 1));
+          setCharIndex(charIndex - 1);
+        } else {
+          setIsDeleting(false);
+          setTextIndex((textIndex + 1) % phrases.length);
+        }
+      }
+    };
+
+    const timer = setInterval(handleTyping, isDeleting ? deletingSpeed : typingSpeed);
+    return () => clearInterval(timer);
+  }, [charIndex, isDeleting, textIndex, phrases]);
+
   return (
     <>
       <NavbarComponent />
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <div className="text-center lg:text-left">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-              Ready to Take Your Startup to the Next Level?
+          <div className="text-center lg:text-left -ml-25">
+            <h1 className="text-3xl md:text-5xl font-semy mb-4 leading-tight">
+              {displayText}
+              <span className="animate-blink">|</span>
             </h1>
-            <p className="text-lg mb-6 max-w-prose mx-auto lg:mx-0">
-              Join hundreds of startups who’ve found their perfect investors through LaunchPad.
+            <p className="text-2xl md:text-2xl mb-6 max-w-prose mx-auto lg:mx-0">
+              Ready to Take Your Startup to the Next Level?
             </p>
-            <button className="bg-white text-blue-600 px-6 py-3 rounded-md hover:bg-gray-100 transition duration-200">
+            <button className="bg-white text-blue-600 px-6 py-3 rounded-md hover:bg-gray-100 transition duration-200 mt-6">
               Get Started for Free
             </button>
           </div>
           <div className="hidden lg:block">
-            {/* Placeholder for future 3D model */}
-            <div className="bg-gray-200 h-64 rounded-lg flex items-center justify-center">
-              <span className="text-gray-500">3D Model Coming Soon</span>
-            </div>
+            {/* Context-relevant image */}
+            <img
+              src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+              alt="Startup team meeting with investors"
+              className="h-64 w-full object-cover rounded-lg shadow-md"
+            />
           </div>
         </div>
         {/* Wave Transition */}
