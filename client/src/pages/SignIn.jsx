@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 
 const SignIn = () => {
   return (
+
     <StyledWrapper>
       <div className="container">
         <div className="heading">Sign In</div>
@@ -218,3 +219,4 @@ const StyledWrapper = styled.div`
 `;
 
 export default SignIn;
+
