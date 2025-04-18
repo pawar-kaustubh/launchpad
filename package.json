@@ -1,0 +1,26 @@
+{
+  "name": "launchpad",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+ "dev":"nodemon api/index.js",
+ "start":"node pai.index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pawar-kaustubh/launchpad.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pawar-kaustubh/launchpad/issues"
+  },
+  "homepage": "https://github.com/pawar-kaustubh/launchpad#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "nodemon": "^3.1.9"
+  }
+}
