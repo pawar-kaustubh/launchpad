@@ -47,20 +47,22 @@ const Home = () => {
       <NavbarComponent />
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20 relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          <div className="text-center lg:text-left -ml-25">
-            <h1 className="text-3xl md:text-5xl font-semy mb-4 leading-tight">
-              {displayText}
-              <span className="animate-blink">|</span>
-            </h1>
-            <p className="text-2xl md:text-2xl mb-6 max-w-prose mx-auto lg:mx-0">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          <div className="text-center lg:text-left lg:pl-12">
+            <div className="mb-6">
+              <h2 className="text-3xl md:text-4xl font-serif text-white animate-pulse">
+                {displayText}
+                <span className="animate-blink">|</span>
+              </h2>
+            </div>
+            <p className="text-3xl md:text-4xl mb-6 max-w-prose mx-auto lg:mx-0">
               Ready to Take Your Startup to the Next Level?
             </p>
-            <button className="bg-white text-blue-600 px-6 py-3 rounded-md hover:bg-gray-100 transition duration-200 mt-6">
+            <button className="bg-white text-blue-600 px-6 py-3 rounded-md hover:bg-gray-100 transition duration-200">
               Get Started for Free
             </button>
           </div>
-          <div className="hidden lg:block">
+          <div className="hidden lg:block mt-12">
             {/* Context-relevant image */}
             <img
               src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
