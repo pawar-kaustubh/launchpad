@@ -8,6 +8,8 @@ import SignUp from "./pages/SignUp";
 import ExploreStartUp from "./pages/ExploreStartUp";
 import StartUpDetails from "./pages/StartupDetails";
 import StartUpForm from "./pages/StartUpForm";
+import Profile from "./pages/Profile";
+import PrivateRoute from "./components/PrivateRoute";
 
 export default function App() {
   return (
@@ -20,6 +22,9 @@ export default function App() {
         <Route path="/explorestartups" element={<ExploreStartUp />} />
         <Route path="/startupdetails" element={<StartUpDetails />} />
         <Route path="/startupform" element={<StartUpForm />} />
+        <Route element={<PrivateRoute />}>
+           <Route path='/profile' element={<Profile />} />
+         </Route>
       </Routes>
     </>
   );

@@ -1,9 +1,10 @@
 // src/components/Navbar.jsx
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
 
   return (
     <nav className="bg-white shadow-md fixed w-full z-10">
@@ -40,11 +41,16 @@ const Navbar = () => {
           </div>
           <div className="hidden sm:flex">
             <div className="hidden sm:flex">
-              <Link
-                to="/signin"
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
-              >
-                Sign In
+              <Link to="/profile">
+                {currentUser ? (
+                  <img
+                    className="rounded-full h-7 w-7 object-cover"
+                    src={currentUser.avatar}
+                    alt="profile"
+                  />
+                ) : (
+                  <li className=" text-slate-700 hover:underline"> Sign in</li>
+                )}
               </Link>
             </div>
           </div>
