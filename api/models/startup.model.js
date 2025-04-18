@@ -21,10 +21,6 @@ const startupSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    password: {
-      type: String,
-      required: true,
-    },
     location: {
       type: String,
       required: true,
@@ -60,6 +56,9 @@ const startupSchema = new mongoose.Schema(
     profit: {
       type: Number,
       required: true,
+    },loss:{
+        type: Number,
+        required: true,
     },
     valuation: {
       type: Number,
