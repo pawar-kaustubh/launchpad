@@ -370,4 +370,5 @@ const StartUpDetails = () => {
   );
 };
 
+
 export default StartUpDetails;
