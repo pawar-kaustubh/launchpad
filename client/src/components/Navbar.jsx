@@ -1,89 +1,49 @@
-import React, { useState, useEffect } from "react";
+// src/components/Navbar.jsx
+import { useState } from 'react';
 
 const Navbar = () => {
-  // We need to know if the user has scrolled down
-  const [hasScrolled, setHasScrolled] = useState(false);
-
-  // This will run only once when the component appears
-  useEffect(() => {
-    console.log(window.scrollY);
-    // Function to check if the user has scrolled
-    const handleScroll = () => {
-      // If the user has scrolled more than 50 pixels down, mark as scrolled
-      if (window.scrollY > 50) {
-        setHasScrolled(true);
-      } else {
-        setHasScrolled(false);
-      }
-    };
-
-    // Listen for the 'scroll' event on the window
-    window.addEventListener("scroll", handleScroll);
-
-    // Clean up: when the component goes away, stop listening for scrolls
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []); // Empty array means run only on mount and unmount
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    // The main navigation bar
-    <nav
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        hasScrolled
-          ? "bg-slate-50 shadow text-slate-800" // When scrolled: light background, shadow, dark text
-          : "bg-slate-900 text-white" // When at top: dark background, white text
-      } py-6`} // Add some vertical space (padding)
-    >
-      {/* Container for the navbar content, keeps it centered */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8  flex items-center justify-between">
-        {/* Left side: Company Name */}
-        <div
-          className={`font-bold text-xl ${
-            hasScrolled ? "text-slate-800" : "text-white"
-          }`}
-        >
-          Launch
-          <span className={`${hasScrolled ? "text-slate-800" : "text-indi"}`}>
-            Pad
-          </span>
-        </div>
-
-        {/* Middle: Creative links (hidden on small screens) */}
-        <div className="hidden md:flex items-center space-x-8 text-sm font-medium">
-          <span className="relative group">
-            Raise{" "}
-            <span
-              className={`absolute -bottom-1 left-0  w-full h-0.5 ${
-                hasScrolled ? "bg-indigo-500" : "bg-indigo-300"
-              } transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300`}
-            ></span>{" "}
-            Funds
-          </span>
-          <span className="relative group">
-            Explore{" "}
-            <span
-              className={`absolute -bottom-1 left-0 w-full h-0.5 ${
-                hasScrolled ? "bg-green-500" : "bg-green-300"
-              } transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300`}
-            ></span>{" "}
-            Startups
-          </span>
-        </div>
-
-        {/* Right side: Sign Up and Login */}
-        <div className="flex items-center space-x-4 text-sm font-medium">
-          <a
-            href="/sign-in"
-            className={`hover:underline ${
-              hasScrolled ? "text-slate-800" : "text-white"
-            }`}
-          >
-            Sign In
-          </a>
-          
+    <nav className="bg-white shadow-md fixed w-full z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between h-16 items-center">
+          <div className="flex-shrink-0 flex items-center">
+            <span className="text-2xl font-bold text-blue-600">LaunchPad</span>
+          </div>
+          <div className="hidden sm:flex sm:space-x-6">
+            <a href="/" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">Home</a>
+            <a href="/investors" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">Investors</a>
+            <a href="/startups" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">Startups</a>
+            <a href="/pitches" className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium">Pitches</a>
+          </div>
+          <div className="hidden sm:flex">
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+              Sign In
+            </button>
+          </div>
+          <div className="sm:hidden flex items-center">
+            <button onClick={() => setIsOpen(!isOpen)} className="text-gray-700 hover:text-blue-600 focus:outline-none">
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
+      {isOpen && (
+        <div className="sm:hidden">
+          <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-md">
+            <a href="/" className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+            <a href="/investors" className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Investors</a>
+            <a href="/startups" className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Startups</a>
+            <a href="/pitches" className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium">Pitches</a>
+            <button className="w-full text-left text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white mt-2">
+              Sign In
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
