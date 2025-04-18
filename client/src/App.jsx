@@ -1,21 +1,19 @@
+// App.jsx
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom"; // No need for BrowserRouter here
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
-
 import Navbar from "./components/Navbar";
 import SignUp from "./pages/SignUp";
 import ExploreStartUp from "./pages/ExploreStartUp";
 import StartUpDetails from "./pages/StartupDetails";
 import StartUpForm from "./pages/StartUpForm";
 
-
 export default function App() {
   return (
-  <>
-  <Navbar/>
+    <>
+      <Navbar />
       <Routes>
-
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
@@ -23,7 +21,6 @@ export default function App() {
         <Route path="/startupdetails" element={<StartUpDetails />} />
         <Route path="/startupform" element={<StartUpForm />} />
       </Routes>
-
-      </>
+    </>
   );
 }
