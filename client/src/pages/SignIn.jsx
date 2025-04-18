@@ -8,7 +8,7 @@ const SignIn = () => {
     <StyledWrapper>
       <div className="container">
         <div className="heading">Sign In</div>
-        <form className="form" action>
+        <form className="form" >
           <input
             placeholder="E-mail"
             id="email"
@@ -28,7 +28,7 @@ const SignIn = () => {
           <span className="forgot-password">
             <a href="#">Forgot Password ?</a>
           </span>
-          <input type="submit" value="Sign In" className="login-button" />
+          <button type="submit" value="Sign In" className="login-button" />
         </form>
         <div className="social-account-container">
           <span className="title">Or Sign in with</span>

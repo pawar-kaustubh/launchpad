@@ -8,3 +8,13 @@
     clip-path: ellipse(100% 60% at 50% 0%);
     transform: translateY(100%);
   }
+  
+  .animate-blink {
+    animation: blink 1s step-end infinite;
+  }
+  
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
