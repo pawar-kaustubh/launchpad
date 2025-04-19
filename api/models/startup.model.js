@@ -56,9 +56,10 @@ const startupSchema = new mongoose.Schema(
     profit: {
       type: Number,
       required: true,
-    },loss:{
-        type: Number,
-        required: true,
+    },
+    loss: {
+      type: Number,
+      required: true,
     },
     valuation: {
       type: Number,
@@ -79,17 +80,21 @@ const startupSchema = new mongoose.Schema(
     runway: {
       type: Number,
       required: true,
-    },logo:{
+    },
+    logo: {
       type: String,
       required: true,
     },
-    coverImage:{
+    coverImage: {
+      type: String,
+      required: true,
+    },
+    userRef: {
       type: String,
       required: true,
     },
     youtube: {
       type: String,
-     
     },
   },
   { timestamps: true }
