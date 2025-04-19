@@ -11,6 +11,7 @@ import StartUpForm from "./pages/StartUpForm";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import InvestorForm from "./pages/InvestorForm";
+import StartupDashboard from "./pages/StartupDashboard";
 
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
         <Route path="/startupdetails" element={<StartUpDetails />} />
         <Route path="/startupform" element={<StartUpForm />} />
         <Route path="/investorform" element={<InvestorForm />} />
+        <Route path='/startupdashbord' element={<StartupDashboard/>}/>
         <Route element={<PrivateRoute />}>
            <Route path='/profile' element={<Profile />} />
          </Route>
