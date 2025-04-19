@@ -2,19 +2,17 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import SignIn from "./pages/SignIn";
-
 import Navbar from "./components/Navbar";
 import SignUp from "./pages/SignUp";
 import ExploreStartUp from "./pages/ExploreStartUp";
-import StartUpDetails from "./pages/StartupDetails";
+import StartUpDetails from "./pages/StartUpDetails";
 import StartUpForm from "./pages/StartUpForm";
-import InvestorForm from "./pages/InvestorForm";
 
 
 export default function App() {
   return (
-  <>
-  <Navbar/>
+    <>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
@@ -22,9 +20,7 @@ export default function App() {
         <Route path="/explorestartups" element={<ExploreStartUp />} />
         <Route path="/startupdetails" element={<StartUpDetails />} />
         <Route path="/startupform" element={<StartUpForm />} />
-        <Route path="/investor" element={<InvestorForm />} />
       </Routes>
-
-      </>
+    </>
   );
 }

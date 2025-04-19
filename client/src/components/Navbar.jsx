@@ -1,9 +1,10 @@
 // src/components/Navbar.jsx
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { currentUser } = useSelector((state) => state.user);
 
   return (
     <nav className="bg-white shadow-md fixed w-full z-10">
@@ -36,12 +37,22 @@ const Navbar = () => {
               className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
             >
               Pitches
-            </a> 
+            </a>
           </div>
           <div className="hidden sm:flex">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
-              <Link to="/signin">Sign In</Link>
-            </button>
+            <div className="hidden sm:flex">
+              <Link to="/profile">
+                {currentUser ? (
+                  <img
+                    className="rounded-full h-7 w-7 object-cover"
+                    src={currentUser.avatar}
+                    alt="profile"
+                  />
+                ) : (
+                  <li className=" text-slate-700 hover:underline"> Sign in</li>
+                )}
+              </Link>
+            </div>
           </div>
           <div className="sm:hidden flex items-center">
             <button
@@ -92,9 +103,12 @@ const Navbar = () => {
             >
               Pitches
             </a>
-            <button className="w-full text-left text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white mt-2">
+            <Link
+              to="/signin"
+              className="block w-full text-center bg-blue-600 text-white px-3 py-2 rounded-md text-base font-medium mt-2 hover:bg-blue-700"
+            >
               Sign In
-            </button>
+            </Link>
           </div>
         </div>
       )}
