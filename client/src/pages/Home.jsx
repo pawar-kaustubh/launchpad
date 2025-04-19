@@ -30,8 +30,6 @@ class ErrorBoundary extends Component {
   }
 }
 
-
-
 // ======================
 // 3D Model Component
 // ======================
