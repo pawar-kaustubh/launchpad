@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp";
 import ExploreStartUp from "./pages/ExploreStartUp";
 import StartUpDetails from "./pages/StartupDetails";
 import StartUpForm from "./pages/StartUpForm";
+import InvestorForm from "./pages/InvestorForm";
 
 
 export default function App() {
@@ -15,13 +16,13 @@ export default function App() {
   <>
   <Navbar/>
       <Routes>
-
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/explorestartups" element={<ExploreStartUp />} />
         <Route path="/startupdetails" element={<StartUpDetails />} />
         <Route path="/startupform" element={<StartUpForm />} />
+        <Route path="/investor" element={<InvestorForm />} />
       </Routes>
 
       </>
