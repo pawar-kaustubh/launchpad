@@ -19,7 +19,8 @@ router.delete('/delete/:id', verifyToken, deleteStartup);
 
 // Route to update a startup by ID
 router.put('/update/:id', verifyToken, updateStartup);
-
+router.get('/get/:id',  getStartup);
+router.get('/getall',  getAllStartup);
 // 🧠 New route for AI Investor analysis
 router.get('/analyze/:id', verifyToken, async (req, res) => {
   try {
