@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import OAuth from "../components/OAuth";
 const SignUp = () => {
   const [formData, setFormData] = React.useState({});
   const [error, setError] = useState(null);
@@ -80,6 +81,7 @@ const SignUp = () => {
           <button disabled={loading} type="submit" value="Sign Up" className="login-button" >
             {loading ? "Loading..." : "Sign Up"}
           </button>
+          <OAuth/>
         </form>
         <div className="social-account-container">
           <span className="title">Or Sign in with</span>
