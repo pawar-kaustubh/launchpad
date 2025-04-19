@@ -4,6 +4,8 @@ import {
   createStartup,
   deleteStartup,
   updateStartup,
+  getStartup,
+  getAllStartup
 } from '../controllers/startup.controller.js';
 import Startup from '../models/startup.model.js'; // Import your Startup model
 import { askGeminiInvestor } from '../utils/gemini.js'; // Import the function to interact with Gemini AI

@@ -2,11 +2,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("startups"); // <-- Add this line
   const { currentUser } = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md py-4 px-8 flex justify-between items-center border-b border-gray-700">
@@ -36,7 +38,10 @@ const Navbar = () => {
               ? "bg-blue-600 text-white"
               : "hover:text-blue-400"
           }`}
-          onClick={() => setActiveTab("startups")}
+          onClick={() => {setActiveTab("startups")
+            
+          }}
+         
         >
           Raise Funds
         </button>
@@ -46,7 +51,10 @@ const Navbar = () => {
               ? "bg-blue-600 text-white"
               : "hover:text-blue-400"
           }`}
-          onClick={() => setActiveTab("investors")}
+          onClick={() => {
+            setActiveTab("investors")
+            navigate('/explorestartups')
+          }}
         >
           Explore Startups
         </button>
