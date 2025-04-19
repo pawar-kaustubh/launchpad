@@ -52,9 +52,16 @@ const Navbar = () => {
         </button>
       </div>
 
-      <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full hover:shadow-lg transition-all transform hover:scale-105">
-        Sign In
-      </button>
+   
+      <Link to='/profile'>
+             {currentUser ? (
+               <img className='rounded-full h-7 w-7 object-cover' src={currentUser.avatar} alt='profile' />
+             ) : (
+              <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full hover:shadow-lg transition-all transform hover:scale-105">
+              Sign In
+            </button>
+             )}
+           </Link>
     </nav>
   );
 };
