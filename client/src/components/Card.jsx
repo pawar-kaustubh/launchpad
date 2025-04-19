@@ -6,40 +6,6 @@ const Card = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Placeholder URL – replace with your actual API when ready
-  // const API_URL = "https://your-backend-api.com/startup"; 
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const res = await fetch(API_URL);
-  //       const data = await res.json();
-  //       setStartup(data);
-  //     } catch (err) {
-  //       setError("Failed to fetch data");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-  // if (loading) {
-  //   return (
-  //     <div className="p-6 rounded-2xl shadow-md bg-white w-full max-w-md mx-auto text-center">
-  //       <p className="text-gray-500">Loading...</p>
-  //     </div>
-  //   );
-  // }
-
-  // if (error) {
-  //   return (
-  //     <div className="p-6 rounded-2xl shadow-md bg-red-50 text-red-600 w-full max-w-md mx-auto text-center">
-  //       <p>{error}</p>
-  //     </div>
-  //   );
-  // }
 
   return (
     <motion.div
@@ -102,3 +68,41 @@ const Card = () => {
 };
 
 export default Card;
+
+
+
+
+  // Placeholder URL – replace with your actual API when ready
+  // const API_URL = "https://your-backend-api.com/startup"; 
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const res = await fetch(API_URL);
+  //       const data = await res.json();
+  //       setStartup(data);
+  //     } catch (err) {
+  //       setError("Failed to fetch data");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
+
+  // if (loading) {
+  //   return (
+  //     <div className="p-6 rounded-2xl shadow-md bg-white w-full max-w-md mx-auto text-center">
+  //       <p className="text-gray-500">Loading...</p>
+  //     </div>
+  //   );
+  // }
+
+  // if (error) {
+  //   return (
+  //     <div className="p-6 rounded-2xl shadow-md bg-red-50 text-red-600 w-full max-w-md mx-auto text-center">
+  //       <p>{error}</p>
+  //     </div>
+  //   );
+  // }

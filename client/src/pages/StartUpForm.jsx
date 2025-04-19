@@ -26,19 +26,25 @@ const StartUpForm = () => {
     youtube: "",
     logo: null,
     coverImage: null,
+    videoOption: "", // Default to empty, user must select
+    videoFile: null,
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  // Calculate progress based on filled fields
   useEffect(() => {
-    const totalFields = Object.keys(formData).length;
+    const totalFields = Object.keys(formData).length - 1; // Exclude videoOption initially
     const filledFields = Object.values(formData).filter(
-      (value) => value !== "" && value !== null
+      (value) => 
+        (value !== "" && value !== null) || 
+        (value && typeof value === "object" && value.name) || 
+        (value === "youtube" || value === "file" || value === "later") // Only these count for videoOption
     ).length;
-    setProgress(Math.round((filledFields / totalFields) * 100));
+    const calculatedProgress = Math.round((filledFields / totalFields) * 100);
+    setProgress(filledFields > 0 ? calculatedProgress : 0); // Strictly 0% if no fields filled
+    console.log("Total Fields:", totalFields, "Filled Fields:", filledFields, "Progress:", calculatedProgress); // Debug
   }, [formData]);
 
   const handleChange = (e) => {
@@ -48,6 +54,17 @@ const StartUpForm = () => {
       [name]: type === "file" ? files[0] : value,
     }));
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  };
+
+  const handleVideoOptionChange = (e) => {
+    const value = e.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      videoOption: value,
+      youtube: value === "youtube" ? prev.youtube : "",
+      videoFile: value === "file" ? prev.videoFile : null,
+    }));
+    setErrors((prevErrors) => ({ ...prevErrors, youtube: "", videoFile: "" }));
   };
 
   const validateForm = () => {
@@ -75,11 +92,11 @@ const StartUpForm = () => {
       "pitchdeck",
       "burnrate",
       "runway",
-      "youtube",
+      "videoOption", // Require video option to be selected
     ];
 
     requiredFields.forEach((field) => {
-      if (!formData[field]) {
+      if (!formData[field] && field !== "youtube" && field !== "videoFile") {
         newErrors[field] = "This field is required";
         isValid = false;
       }
@@ -95,6 +112,11 @@ const StartUpForm = () => {
       isValid = false;
     }
 
+    if (formData.videoOption === "youtube" && formData.youtube && !/^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+$/.test(formData.youtube)) {
+      newErrors.youtube = "Invalid YouTube URL";
+      isValid = false;
+    }
+
     setErrors(newErrors);
     return isValid;
   };
@@ -105,13 +127,11 @@ const StartUpForm = () => {
       setIsSubmitting(true);
       console.log("Submitting data:", formData);
       
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       setIsSubmitting(false);
       setSubmitSuccess(true);
       
-      // Reset form after 3 seconds
       setTimeout(() => {
         setSubmitSuccess(false);
       }, 3000);
@@ -161,7 +181,9 @@ const StartUpForm = () => {
       icon: "📷",
       fields: [
         { label: "Link to Pitch Deck", type: "url", name: "pitchdeck", placeholder: "Link to your investor deck" },
-        { label: "YouTube Video Link", type: "url", name: "youtube", placeholder: "Demo or explainer video" },
+        { label: "Pitch Video Option", type: "select", name: "videoOption", options: ["youtube", "file", "later"], onChange: handleVideoOptionChange },
+        { label: "YouTube Video Link", type: "url", name: "youtube", placeholder: "https://youtube.com/watch?v=...", hidden: formData.videoOption !== "youtube" },
+        { label: "Upload Video File", type: "file", name: "videoFile", accept: "video/*", hidden: formData.videoOption !== "file" },
         { label: "Startup Logo", type: "file", name: "logo", accept: "image/*" },
         { label: "Cover Image", type: "file", name: "coverImage", accept: "image/*" },
       ],
@@ -178,7 +200,14 @@ const StartUpForm = () => {
             </svg>
           </div>
           <h2 className="mt-3 text-2xl font-bold text-gray-900">Submission Successful!</h2>
-          <p className="mt-2 text-gray-600">Thank you for sharing your startup details with us. We'll review your information and get back to you soon.</p>
+          <p className="mt-2 text-gray-600">
+            Thank you for sharing your startup details. We'll review your information and get back to you soon.
+            {formData.videoOption === "later" || (!formData.youtube && !formData.videoFile) && (
+              <span className="block mt-2 text-yellow-600">
+                Reminder: Please add a pitch video (YouTube link or file) for analysis and display on your profile/pitch section.
+              </span>
+            )}
+          </p>
           <button
             onClick={() => setSubmitSuccess(false)}
             className="mt-5 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -193,15 +222,14 @@ const StartUpForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
-        {/* Header with progress */}
-        <div className="bg-gradient-to-r from-purple-500 to-blue-600 py-6 px-6 relative">
-          <div className="absolute top-0 left-0 h-1 bg-purple-300" style={{ width: `${progress}%` }}></div>
+        <div className="bg-gradient-to-r from-indigo-600 to-blue-700 py-6 px-6 relative">
+          <div className="absolute top-0 left-0 h-1 bg-gray-300 transition-all duration-300" style={{ width: `${progress}%`, background: progress > 0 ? "linear-gradient(to right, #4B5EFC, #7B61FF)" : "#D1D5DB" }}></div>
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-white tracking-tight">
                 🚀 Share Your Startup Story
               </h1>
-              <p className="mt-2 text-purple-100">
+              <p className="mt-2 text-gray-100">
                 {progress < 50 
                   ? "Let's get started! Every great journey begins with a single step." 
                   : progress < 80 
@@ -210,16 +238,12 @@ const StartUpForm = () => {
               </p>
             </div>
             <div className="mt-4 sm:mt-0 bg-white bg-opacity-20 rounded-full px-4 py-2">
-              <span className="font-medium text-white">{progress}% Complete</span>
+              <span className="font-medium text-gray-800">{progress}% Complete</span>
             </div>
           </div>
         </div>
-
-        {/* Tabs */}
         <div className="sm:hidden border-b border-gray-200 px-4">
-          <label htmlFor="tabs" className="sr-only">
-            Select a tab
-          </label>
+          <label htmlFor="tabs" className="sr-only">Select a tab</label>
           <select
             id="tabs"
             className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
@@ -251,80 +275,94 @@ const StartUpForm = () => {
             ))}
           </nav>
         </div>
-
-        {/* Form */}
         <div className="p-6 sm:p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center">
               {formSections[activeTab].icon} 
               <span className="ml-2">{formSections[activeTab].title}</span>
             </h2>
-            
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-              {formSections[activeTab].fields.map((field) => (
-                <div 
-                  key={field.name} 
-                  className={field.type === "textarea" || field.type === "file" ? "sm:col-span-2" : ""}
-                >
-                  <label
-                    htmlFor={field.name}
-                    className="block text-sm font-medium text-gray-700 mb-1"
+              {formSections[activeTab].fields.map((field) => {
+                if (field.hidden && field.hidden) return null;
+                return (
+                  <div 
+                    key={field.name} 
+                    className={field.type === "textarea" || field.type === "file" || field.name === "videoOption" ? "sm:col-span-2" : ""}
                   >
-                    {field.label}
-                    <span className="text-red-500 ml-1">{errors[field.name] ? '*' : ''}</span>
-                  </label>
-                  {field.type === "textarea" ? (
-                    <textarea
-                      id={field.name}
-                      name={field.name}
-                      rows={4}
-                      className={`shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border ${
-                        errors[field.name] ? "border-red-300" : "border-gray-300"
-                      } rounded-md transition duration-150 ease-in-out`}
-                      value={formData[field.name] || ""}
-                      onChange={handleChange}
-                      placeholder={field.placeholder}
-                    />
-                  ) : field.type === "file" ? (
-                    <div className="mt-1 flex items-center">
-                      <label className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Choose File
-                        <input
-                          type="file"
-                          id={field.name}
-                          name={field.name}
-                          className="sr-only"
-                          onChange={handleChange}
-                          accept={field.accept}
-                        />
-                      </label>
-                      <span className="ml-3 text-sm text-gray-500 truncate max-w-xs">
-                        {formData[field.name] 
-                          ? formData[field.name].name || "File selected" 
-                          : "No file chosen"}
-                      </span>
-                    </div>
-                  ) : (
-                    <input
-                      type={field.type}
-                      id={field.name}
-                      name={field.name}
-                      className={`shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border ${
-                        errors[field.name] ? "border-red-300" : "border-gray-300"
-                      } rounded-md py-2 px-3 transition duration-150 ease-in-out`}
-                      value={formData[field.name] || ""}
-                      onChange={handleChange}
-                      placeholder={field.placeholder}
-                    />
-                  )}
-                  {errors[field.name] && (
-                    <p className="mt-1 text-sm text-red-600 animate-pulse">{errors[field.name]}</p>
-                  )}
-                </div>
-              ))}
+                    <label
+                      htmlFor={field.name}
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                    >
+                      {field.label}
+                      <span className="text-red-500 ml-1">{errors[field.name] ? '*' : ''}</span>
+                    </label>
+                    {field.type === "select" ? (
+                      <select
+                        id={field.name}
+                        name={field.name}
+                        className={`shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border ${
+                          errors[field.name] ? "border-red-300" : "border-gray-300"
+                        } rounded-md py-2 px-3 transition duration-150 ease-in-out`}
+                        value={formData[field.name]}
+                        onChange={field.onChange || handleChange}
+                        required
+                      >
+                        <option value="" disabled>Select an option</option>
+                        {field.options.map((option) => (
+                          <option key={option} value={option}>{option.charAt(0).toUpperCase() + option.slice(1)}</option>
+                        ))}
+                      </select>
+                    ) : field.type === "textarea" ? (
+                      <textarea
+                        id={field.name}
+                        name={field.name}
+                        rows={4}
+                        className={`shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border ${
+                          errors[field.name] ? "border-red-300" : "border-gray-300"
+                        } rounded-md transition duration-150 ease-in-out`}
+                        value={formData[field.name] || ""}
+                        onChange={handleChange}
+                        placeholder={field.placeholder}
+                      />
+                    ) : field.type === "file" ? (
+                      <div className="mt-1 flex items-center">
+                        <label className="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                          Choose File
+                          <input
+                            type="file"
+                            id={field.name}
+                            name={field.name}
+                            className="sr-only"
+                            onChange={handleChange}
+                            accept={field.accept}
+                          />
+                        </label>
+                        <span className="ml-3 text-sm text-gray-500 truncate max-w-xs">
+                          {formData[field.name] 
+                            ? formData[field.name].name || "File selected" 
+                            : "No file chosen"}
+                        </span>
+                      </div>
+                    ) : (
+                      <input
+                        type={field.type}
+                        id={field.name}
+                        name={field.name}
+                        className={`shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border ${
+                          errors[field.name] ? "border-red-300" : "border-gray-300"
+                        } rounded-md py-2 px-3 transition duration-150 ease-in-out`}
+                        value={formData[field.name] || ""}
+                        onChange={handleChange}
+                        placeholder={field.placeholder}
+                      />
+                    )}
+                    {errors[field.name] && (
+                      <p className="mt-1 text-sm text-red-600 animate-pulse">{errors[field.name]}</p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-
-            {/* Navigation Buttons */}
             <div className="flex justify-between pt-6 border-t border-gray-200">
               <button
                 type="button"
@@ -339,11 +377,9 @@ const StartUpForm = () => {
                 </svg>
                 Previous
               </button>
-              
               <div className="text-xs text-gray-500 hidden sm:block">
                 Section {activeTab + 1} of {formSections.length}
               </div>
-              
               {activeTab < formSections.length - 1 ? (
                 <button
                   type="button"
@@ -378,8 +414,6 @@ const StartUpForm = () => {
           </form>
         </div>
       </div>
-      
-      {/* Help text */}
       <div className="mt-6 text-center text-sm text-gray-500">
         <p>Need help? <a href="#" className="text-indigo-600 hover:text-indigo-500">Contact our support team</a></p>
       </div>

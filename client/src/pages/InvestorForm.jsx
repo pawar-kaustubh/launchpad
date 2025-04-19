@@ -63,12 +63,14 @@ const InvestorForm = () => {
 
   // Calculate progress based on filled fields
   useEffect(() => {
-    const totalFields = Object.keys(formData).length - 2; // Exclude arrays from count
+    const totalFields = Object.keys(formData).length; // Total fields is 16
     const filledFields = Object.entries(formData).filter(([key, value]) => {
       if (Array.isArray(value)) return value.length > 0;
       return value !== "" && value !== null;
     }).length;
-    setProgress(Math.round((filledFields / totalFields) * 100));
+    const calculatedProgress = Math.round((filledFields / totalFields) * 100);
+    setProgress(Math.min(100, calculatedProgress)); // Cap at 100%
+    console.log("Total Fields:", totalFields, "Filled Fields:", filledFields, "Progress:", calculatedProgress); // Debug
   }, [formData]);
 
   const handleChange = (e) => {
@@ -99,9 +101,14 @@ const InvestorForm = () => {
       "location",
       "linkedin",
       "investmentType",
+      "industryInterest",
       "ticketSize",
       "minInvestment",
+      "fundingStageInterest",
+      "portfolio",
       "about",
+      "website",
+      "preferredEquityRange",
     ];
 
     requiredFields.forEach((field) => {
@@ -161,7 +168,7 @@ const InvestorForm = () => {
         { label: "Country", type: "text", name: "country", placeholder: "Where are you based?" },
         { label: "Location", type: "text", name: "location", placeholder: "City, State/Region" },
         { label: "LinkedIn Profile", type: "url", name: "linkedin", placeholder: "https://linkedin.com/in/yourprofile" },
-        { label: "Personal Website", type: "url", name: "website", placeholder: "https://yourwebsite.com", required: false },
+        { label: "Personal Website", type: "url", name: "website", placeholder: "https://yourwebsite.com" },
       ],
     },
     {
@@ -190,7 +197,7 @@ const InvestorForm = () => {
         },
         { label: "Typical Ticket Size ($)", type: "number", name: "ticketSize", placeholder: "Maximum investment amount" },
         { label: "Minimum Investment ($)", type: "number", name: "minInvestment", placeholder: "Minimum investment amount" },
-        { label: "Preferred Equity Range", type: "text", name: "preferredEquityRange", placeholder: "e.g., 5% - 15%", required: false },
+        { label: "Preferred Equity Range", type: "text", name: "preferredEquityRange", placeholder: "e.g., 5% - 15%" },
       ],
     },
     {
@@ -198,7 +205,7 @@ const InvestorForm = () => {
       icon: "📝",
       fields: [
         { label: "About You", type: "textarea", name: "about", placeholder: "Tell us about your investment philosophy and experience" },
-        { label: "Portfolio Companies", type: "textarea", name: "portfolio", placeholder: "List companies you've invested in (names or URLs)", required: false },
+        { label: "Portfolio Companies", type: "textarea", name: "portfolio", placeholder: "List companies you've invested in (names or URLs)" },
       ],
     },
   ];
@@ -229,14 +236,14 @@ const InvestorForm = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
         {/* Header with progress */}
-        <div className="bg-gradient-to-r from-blue-500 to-green-600 py-6 px-6 relative">
-          <div className="absolute top-0 left-0 h-1 bg-blue-300" style={{ width: `${progress}%` }}></div>
+        <div className="bg-gradient-to-r from-blue-600 to-green-700 py-6 px-6 relative">
+          <div className="absolute top-0 left-0 h-1 bg-gray-300 transition-all duration-300" style={{ width: `${progress}%`, background: progress > 0 ? "linear-gradient(to right, #3B82F6, #10B981)" : "#D1D5DB" }}></div>
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold text-white tracking-tight">
                 🏦 Join Our Investor Network
               </h1>
-              <p className="mt-2 text-blue-100">
+              <p className="mt-2 text-gray-100">
                 {progress < 50 
                   ? "Let's get to know you! Complete your profile to access startups." 
                   : progress < 80 
@@ -245,7 +252,7 @@ const InvestorForm = () => {
               </p>
             </div>
             <div className="mt-4 sm:mt-0 bg-white bg-opacity-20 rounded-full px-4 py-2">
-              <span className="font-medium text-white">{progress}% Complete</span>
+              <span className="font-medium text-gray-800">{progress}% Complete</span>
             </div>
           </div>
         </div>
@@ -309,7 +316,6 @@ const InvestorForm = () => {
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
                     {field.label}
-                    {!field.required && <span className="text-gray-500 ml-1">(optional)</span>}
                     {errors[field.name] && <span className="text-red-500 ml-1">*</span>}
                   </label>
                   
