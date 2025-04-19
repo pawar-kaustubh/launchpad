@@ -1,8 +1,9 @@
 
 import Startup from "../models/startup.model.js";
 import { errorHandler } from "../utils/error.js";
-import {askGeminiInvestor} from "../utils/gemini.js"; // ✅ Import Gemini
+import { askGeminiInvestor } from "../utils/gemini.js"; // ✅ Import Gemini
 
+// Create Startup
 export const createStartup = async (req, res, next) => {
   try {
     const startup = await Startup.create({
@@ -15,6 +16,7 @@ export const createStartup = async (req, res, next) => {
   }
 };
 
+// Delete Startup
 export const deleteStartup = async (req, res, next) => {
   const startup = await Startup.findById(req.params.id);
 
@@ -34,6 +36,7 @@ export const deleteStartup = async (req, res, next) => {
   }
 };
 
+// Update Startup
 export const updateStartup = async (req, res, next) => {
   const startup = await Startup.findById(req.params.id);
   if (!startup) {
@@ -55,6 +58,7 @@ export const updateStartup = async (req, res, next) => {
   }
 };
 
+// Analyze Startup Idea with Gemini API
 export const analyzeStartup = async (req, res, next) => {
   try {
     const { name, idea, targetMarket } = req.body;
@@ -68,7 +72,9 @@ export const analyzeStartup = async (req, res, next) => {
     `;
 
     const response = await askGeminiInvestor.generateContent(prompt);
-    const result = await response.response.text();
+
+    // Assuming response is already the correct format
+    const result = response.text; // or whatever structure your API returns
 
     res.status(200).json({
       success: true,
@@ -79,8 +85,7 @@ export const analyzeStartup = async (req, res, next) => {
   }
 };
 
-
-
+// Get a Single Startup
 export const getStartup = async (req, res, next) => {
   try {
     const startup = await Startup.findById(req.params.id);
@@ -89,35 +94,40 @@ export const getStartup = async (req, res, next) => {
     }
     res.status(200).json(startup);
   } catch (error) {
-    next(error);
+    next(error); // Pass error to the error handling middleware
   }
-  
-  }
+};
 
-  export const getAllStartup = async (req, res, next) => {
-    try {
-      // Extract query parameters for pagination and sorting
-      const { page = 1, limit = 10, sortBy = "createdAt", order = "desc" } = req.query;
-  
-      // Build the query to filter startups by the logged-in user
-      const filter = req.user ? { userRef: req.user.id } : {};
-  
-      // Fetch startups with pagination and sorting
-      const startups = await Startup.find(filter)
-        .sort({ [sortBy]: order === "desc" ? -1 : 1 })
-        .skip((page - 1) * limit)
-        .limit(Number(limit));
-  
-      // Get the total count of startups for pagination metadata
-      const totalStartups = await Startup.countDocuments(filter);
-  
-      res.status(200).json({
-        startups,
-        totalStartups,
-        totalPages: Math.ceil(totalStartups / limit),
-        currentPage: Number(page),
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
+// Get All Startups with Pagination and Sorting
+export const getAllStartup = async (req, res, next) => {
+  try {
+    // Extract query parameters with default values
+    const { page = 1, limit = 10, sortBy = "createdAt", order = "desc" } = req.query;
+
+    // Validate query parameters
+    const pageNum = Math.max(1, parseInt(page)); // Ensure page is at least 1
+    const pageSize = Math.max(1, Math.min(parseInt(limit), 100)); // Limit to a reasonable max
+    const sortOrder = order === "desc" ? -1 : 1;
+
+    // Build the filter based on the logged-in user
+    const filter = req.user ? { userRef: req.user.id } : {};
+
+    // Fetch startups with pagination and sorting
+    const startups = await Startup.find(filter)
+      .sort({ [sortBy]: sortOrder })
+      .skip((pageNum - 1) * pageSize)
+      .limit(pageSize);
+
+    // Get total count of startups for pagination metadata
+    const totalStartups = await Startup.countDocuments(filter);
+
+    res.status(200).json({
+      startups,
+      totalStartups,
+      totalPages: Math.ceil(totalStartups / pageSize),
+      currentPage: pageNum,
+    });
+  } catch (error) {
+    next(error); // Pass errors to error handling middleware
+  }
+};

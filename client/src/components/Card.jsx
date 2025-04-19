@@ -1,69 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+
 
 export default function FilterableCardGrid() {
   const [selectedType, setSelectedType] = useState("");
 
+  
+
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  const cards = [
+  const [cards, setCards ] = useState([]);
+  const navigate = useNavigate();
 
-    {
-      id: 1,
-      name: "Tech Startup",
-      desc: "A startup in technology",
-      valuation: "$5M",
-      revenue: "$500K",
-      profitable: true,
-      investors: "Angel Investors",
-      type: "Technology",
-      bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+1",
-      logoImg: "https://via.placeholder.com/100.png?text=Logo+1",
-      fundingProgress: 70,
-    },
-    {
-      id: 2,
-      name: "Management Co.",
-      desc: "Business Management",
-      valuation: "$10M",
-      revenue: "$1M",
-      profitable: false,
-      investors: "VC Fund",
-      type: "Management",
-      bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+2",
-      logoImg: "https://via.placeholder.com/100.png?text=Logo+2",
-      fundingProgress: 40,
-    },
-    {
-      id: 3,
-      name: "Health Startup",
-      desc: "Improving healthcare systems",
-      valuation: "$8M",
-      revenue: "$900K",
-      profitable: true,
-      investors: "Private Equity",
-      type: "Healthcare",
-      bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+3",
-      logoImg: "https://via.placeholder.com/100.png?text=Logo+3",
-      fundingProgress: 55,
-    },
-    {
-      id: 4,
-      name: "Health Startup",
-      desc: "Improving healthcare systems",
-      valuation: "$8M",
-      revenue: "$900K",
-      profitable: true,
-      investors: "Private Equity",
-      type: "Healthcare",
-      bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+3",
-      logoImg: "https://via.placeholder.com/100.png?text=Logo+3",
-      fundingProgress: 55,
-    },
+  const showDetails = (id) =>{
+    navigate(`/startupdetails/${id}`)
+  }
+ 
 
-  ];
+const types1 =  ["SaaS","e-commers"]
+  useEffect(() => {
+    const fetchStartups = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/startup/getall");
+        const data = await response.json();
+        // console.log(data)
+        setCards(data.startups);
+    
+      } catch (error) {
+        console.error("Error fetching startups:", error);
+      }
+    };
 
-  const types = ["All", ...new Set(cards.map((c) => c.type))];
+    fetchStartups(); }, []);
+  
+  const types = ["All", ...new Set(types1.map((c) => c))];
   const filtered =
     !selectedType || selectedType === "All"
       ? cards
@@ -139,7 +110,7 @@ export default function FilterableCardGrid() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map((card) => (
                 <motion.div
-                  key={card?.id}
+                  key={card?._id}
                   className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-blue-400/50 transition-all overflow-hidden flex flex-col"
                   whileHover={{ scale: 1.03 }}
                   onMouseEnter={() => setHoveredCard(card?.id)}
@@ -148,7 +119,8 @@ export default function FilterableCardGrid() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="relative overflow-hidden h-48">
+                  <div className="relative overflow-hidden h-48" 
+                      >
                     <img
                       src={card?.bannerImg}
                       alt={`${card?.name} banner`}
@@ -156,18 +128,18 @@ export default function FilterableCardGrid() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
                     <span className="absolute top-4 right-4 text-xs bg-gray-900/80 text-blue-400 px-3 py-1 rounded-full border border-blue-400/20">
-                      {card.type}
-                    </span>
+                      {card.industry}
+                    </span> 
                   </div>
 
                   <div className="p-5 flex-grow flex flex-col">
                     <div className="flex items-start mb-4">
                       <div className="flex-1">
                         <h2 className="text-xl font-semibold text-white truncate">
-                          {card.name}
+                          {card.startupname}
                         </h2>
                         <p className="text-gray-400 text-sm mt-1">
-                          {card.desc}
+                          {card.startupdesc}
                         </p>
 
                       </div>
@@ -191,12 +163,12 @@ export default function FilterableCardGrid() {
                         <span className="text-gray-400">Profitable</span>
                         <span
                           className={
-                            card.profitable
+                            card.profit
                               ? "text-green-400 font-medium"
                               : "text-red-400 font-medium"
                           }
                         >
-                          {card.profitable ? "Yes" : "No"}
+                          {card.profit ? "Yes" : "No"}
                         </span>
                       </div>
                       <div className="flex justify-between">
@@ -217,7 +189,7 @@ export default function FilterableCardGrid() {
                       <div className="w-full bg-gray-700 rounded-full h-2">
                         <motion.div
                           className={`h-full rounded-full ${
-                            hoveredCard === card.id
+                            hoveredCard === cards._id
                               ? "bg-gradient-to-r from-blue-500 to-purple-500"
                               : "bg-blue-500"
                           }`}
@@ -230,14 +202,16 @@ export default function FilterableCardGrid() {
                     </div>
 
                     <motion.button
+             
                       className={`mt-6 w-full py-2 rounded-lg font-medium transition-all ${
-
-                        hoveredCard === card.id
+                        
+                        hoveredCard === card._id
                           ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
                           : "bg-gray-700 text-gray-300"
                       }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
+                      onClick={ ()=>showDetails(card._id)} 
                     >
                       View Details
                     </motion.button>
