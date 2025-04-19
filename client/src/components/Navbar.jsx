@@ -2,116 +2,59 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("startups"); // <-- Add this line
   const { currentUser } = useSelector((state) => state.user);
 
   return (
-    <nav className="bg-white shadow-md fixed w-full z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          <div className="flex-shrink-0 flex items-center">
-            <span className="text-2xl font-bold text-blue-600">LaunchPad</span>
-          </div>
-          <div className="hidden sm:flex sm:space-x-6">
-            <a
-              href="/"
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
-            >
-              Home
-            </a>
-            <a
-              href="/investors"
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
-            >
-              Investors
-            </a>
-            <a
-              href="/startups"
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
-            >
-              Startups
-            </a>
-            <a
-              href="/pitches"
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium"
-            >
-              Pitches
-            </a>
-          </div>
-          <div className="hidden sm:flex">
-            <div className="hidden sm:flex">
-              <Link to="/profile">
-                {currentUser ? (
-                  <img
-                    className="rounded-full h-7 w-7 object-cover"
-                    src={currentUser.avatar}
-                    alt="profile"
-                  />
-                ) : (
-                  <li className=" text-slate-700 hover:underline"> Sign in</li>
-                )}
-              </Link>
-            </div>
-          </div>
-          <div className="sm:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-blue-600 focus:outline-none"
-            >
-              <svg
-                className="h-6 w-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16m-7 6h7"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-md py-4 px-8 flex justify-between items-center border-b border-gray-700">
+      <div className="flex items-center space-x-2">
+        <svg
+          className="w-8 h-8 text-blue-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M13 10V3L4 14h7v7l9-11h-7z"
+          />
+        </svg>
+        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+          LaunchPad
+        </span>
       </div>
-      {isOpen && (
-        <div className="sm:hidden">
-          <div className="px-2 pt-2 pb-3 space-y-1 bg-white shadow-md">
-            <a
-              href="/"
-              className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Home
-            </a>
-            <a
-              href="/investors"
-              className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Investors
-            </a>
-            <a
-              href="/startups"
-              className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Startups
-            </a>
-            <a
-              href="/pitches"
-              className="text-gray-700 hover:text-blue-600 block px-3 py-2 rounded-md text-base font-medium"
-            >
-              Pitches
-            </a>
-            <Link
-              to="/signin"
-              className="block w-full text-center bg-blue-600 text-white px-3 py-2 rounded-md text-base font-medium mt-2 hover:bg-blue-700"
-            >
-              Sign In
-            </Link>
-          </div>
-        </div>
-      )}
+
+      <div className="hidden md:flex space-x-8">
+        <button
+          className={`px-4 py-2 rounded-full transition-all ${
+            activeTab === "startups"
+              ? "bg-blue-600 text-white"
+              : "hover:text-blue-400"
+          }`}
+          onClick={() => setActiveTab("startups")}
+        >
+          Raise Funds
+        </button>
+        <button
+          className={`px-4 py-2 rounded-full transition-all ${
+            activeTab === "investors"
+              ? "bg-blue-600 text-white"
+              : "hover:text-blue-400"
+          }`}
+          onClick={() => setActiveTab("investors")}
+        >
+          Explore Startups
+        </button>
+      </div>
+
+      <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full hover:shadow-lg transition-all transform hover:scale-105">
+        Sign In
+      </button>
     </nav>
   );
 };
