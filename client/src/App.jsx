@@ -15,7 +15,7 @@ import PrivateRoute from "./components/PrivateRoute";
 export default function App() {
   return (
     <>
-      <Navbar />
+    <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<SignIn />} />
