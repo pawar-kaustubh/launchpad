@@ -1,3 +1,4 @@
+import { start } from "repl";
 import Startup from "../models/startup.model.js";
 import { errorHandler } from "../utils/error.js";
 
@@ -52,3 +53,17 @@ export const createStartup = async (req, res, next) => {
     next(error);
   }
 };
+
+
+export const getStartup = async (req, res, next) => {
+  try {
+    const startup = await Startup.findById(req.params.id);
+    if (!startup) {
+      return next(errorHandler(404, 'Startup not found!'));
+    }
+    res.status(200).json(startup);
+  } catch (error) {
+    next(error);
+  }
+  
+  }
