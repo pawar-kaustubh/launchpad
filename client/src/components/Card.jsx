@@ -3,9 +3,11 @@ import { motion } from "framer-motion";
 
 export default function FilterableCardGrid() {
   const [selectedType, setSelectedType] = useState("");
+
   const [hoveredCard, setHoveredCard] = useState(null);
 
   const cards = [
+
     {
       id: 1,
       name: "Tech Startup",
@@ -58,6 +60,7 @@ export default function FilterableCardGrid() {
       logoImg: "https://via.placeholder.com/100.png?text=Logo+3",
       fundingProgress: 55,
     },
+
   ];
 
   const types = ["All", ...new Set(cards.map((c) => c.type))];
@@ -110,11 +113,13 @@ export default function FilterableCardGrid() {
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Funding Avg</span>
                 <span className="font-medium text-purple-400">
+
                   {Math.round(
                     cards.reduce((acc, c) => acc + c.fundingProgress, 0) /
                       cards.length
                   )}
                   %
+
                 </span>
               </div>
             </div>
@@ -134,10 +139,10 @@ export default function FilterableCardGrid() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map((card) => (
                 <motion.div
-                  key={card.id}
+                  key={card?.id}
                   className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-blue-400/50 transition-all overflow-hidden flex flex-col"
                   whileHover={{ scale: 1.03 }}
-                  onMouseEnter={() => setHoveredCard(card.id)}
+                  onMouseEnter={() => setHoveredCard(card?.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -145,8 +150,8 @@ export default function FilterableCardGrid() {
                 >
                   <div className="relative overflow-hidden h-48">
                     <img
-                      src={card.bannerImg}
-                      alt={`${card.name} banner`}
+                      src={card?.bannerImg}
+                      alt={`${card?.name} banner`}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
@@ -164,12 +169,14 @@ export default function FilterableCardGrid() {
                         <p className="text-gray-400 text-sm mt-1">
                           {card.desc}
                         </p>
+
                       </div>
                     </div>
 
                     <div className="mt-2 text-sm space-y-2">
                       <div className="flex justify-between">
                         <span className="text-gray-400">Valuation</span>
+
                         <span className="font-medium text-blue-400">
                           {card.valuation}
                         </span>
@@ -194,16 +201,18 @@ export default function FilterableCardGrid() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Investors</span>
+
                         <span className="font-medium text-white truncate max-w-[120px]">
                           {card.investors}
                         </span>
+
                       </div>
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-gray-700/50">
                       <div className="flex justify-between text-xs text-gray-400 mb-1">
                         <span>Funding Progress</span>
-                        <span>{card.fundingProgress}%</span>
+                        <span>{card?.fundingProgress}%</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-2">
                         <motion.div
@@ -212,6 +221,7 @@ export default function FilterableCardGrid() {
                               ? "bg-gradient-to-r from-blue-500 to-purple-500"
                               : "bg-blue-500"
                           }`}
+
                           initial={{ width: 0 }}
                           animate={{ width: `${card.fundingProgress}%` }}
                           transition={{ duration: 0.8, delay: 0.2 }}
@@ -221,6 +231,7 @@ export default function FilterableCardGrid() {
 
                     <motion.button
                       className={`mt-6 w-full py-2 rounded-lg font-medium transition-all ${
+
                         hoveredCard === card.id
                           ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
                           : "bg-gray-700 text-gray-300"
