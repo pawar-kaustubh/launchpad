@@ -13,7 +13,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import InvestorForm from "./pages/InvestorForm";
 // import StartupDashboard from "./pages/StartupDashboard";
 
-
 export default function App() {
   return (
     <>
