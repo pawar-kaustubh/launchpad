@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -7,10 +7,10 @@ import {
 } from "firebase/storage";
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { current } from "@reduxjs/toolkit";
+import { useNavigate, useParams } from "react-router-dom";
 
-const StartUpForm = () => {
+
+const UpdateStartup = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [formData, setFormData] = useState({
     username: "",
@@ -273,6 +273,25 @@ const StartUpForm = () => {
   });
   const currentUser = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
+  const params = useParams();
+
+  useEffect(() => {
+    const fetchStartup = async () => {
+        const startupId = params.startupId;
+        const res = await fetch(`/api/startup/get/${startupId}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${currentUser.token}`,
+            },
+          });
+        if (!res.ok) {
+          throw new Error("Failed to fetch startup data");
+        }
+        const data = await res.json();
+        setFormData(data);
+    };
+    fetchStartup();
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -534,105 +553,115 @@ const StartUpForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+   
 
-    if (!validateForm()) {
-      // Scroll to the first error
-      const firstErrorField = Object.keys(errors)[0];
-      if (firstErrorField) {
-        document.getElementById(`field-${firstErrorField}`)?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-      return;
-    }
-
+    console.log("Current user")
     if (!currentUser?._id) {
       navigate("/login");
       return;
     }
-
+  
     setIsSubmitting(true);
     setErrors({});
-
+  
     try {
-      // Upload files in parallel
-      const [logoURL, coverImageURL, videoURL] = await Promise.all([
-        uploadFileToFirebase(
-          formData.logo,
-          `startups/${currentUser._id}/logo/${formData.logo.name}`,
-          "logo"
-        ),
-        uploadFileToFirebase(
-          formData.coverImage,
-          `startups/${currentUser._id}/cover/${formData.coverImage.name}`,
-          "coverImage"
-        ),
-        formData.videoOption === "file" && formData.videoFile
-          ? uploadFileToFirebase(
-              formData.videoFile,
-              `startups/${currentUser._id}/video/${formData.videoFile.name}`,
-              "videoFile"
-            )
-          : formData.videoOption === "youtube"
-          ? formData.youtube
-          : null,
-      ]);
+      // Only upload files if they are new (File objects)
+      const uploadPromises = [];
+      const result = {
+        logo: formData.logo,
+        coverImage: formData.coverImage,
+        video: formData.videoOption === "youtube" ? formData.youtube : 
+              formData.videoOption === "file" ? formData.videoFile : null
+      };
+  
 
+      console.log("Step 3rd")
+      if (formData.logo instanceof File) {
+        uploadPromises.push(
+          uploadFileToFirebase(
+            formData.logo,
+            `startups/${currentUser._id}/logo/${formData.logo.name}`,
+            "logo"
+          ).then(url => { result.logo = url })
+        );
+      }
+  
+      if (formData.coverImage instanceof File) {
+        uploadPromises.push(
+          uploadFileToFirebase(
+            formData.coverImage,
+            `startups/${currentUser._id}/cover/${formData.coverImage.name}`,
+            "coverImage"
+          ).then(url => { result.coverImage = url })
+        );
+      }
+  
+      if (formData.videoOption === "file" && formData.videoFile instanceof File) {
+        uploadPromises.push(
+          uploadFileToFirebase(
+            formData.videoFile,
+            `startups/${currentUser._id}/video/${formData.videoFile.name}`,
+            "videoFile"
+          ).then(url => { result.video = url })
+        );
+      }
+  
+      await Promise.all(uploadPromises);
+  
       const startupDataToSend = {
         ...formData,
-        logo: logoURL,
-        coverImage: coverImageURL,
-        video: videoURL,
+        logo: result.logo,
+        coverImage: result.coverImage,
+        video: result.video,
         userId: currentUser._id,
-        createdAt: new Date().toISOString(),
       };
-
-      // Remove unnecessary fields
-      delete startupDataToSend.videoOption;
-      delete startupDataToSend.videoFile;
-      delete startupDataToSend.youtube;
-
-      // Convert numeric fields to numbers
-      const numericFields = [
-        "totalsales",
-        "revenue",
-        "profit",
-        "loss",
-        "valuation",
-        "equity",
-        "burnrate",
-        "runway",
-      ];
-      numericFields.forEach((field) => {
-        if (startupDataToSend[field] !== "") {
-          startupDataToSend[field] = Number(startupDataToSend[field]);
-        }
-      });
-
-      const response = await fetch("/api/startup/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${currentUser.token}`,
-        },
-        body: JSON.stringify(startupDataToSend),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to submit startup data");
-      }
-
-      setSubmitSuccess(true);
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 3000);
+  
+       // Remove unnecessary fields
+       delete startupDataToSend.videoOption;
+       delete startupDataToSend.videoFile;
+       delete startupDataToSend.youtube;
+ 
+       // Convert numeric fields to numbers
+       const numericFields = [
+         "totalsales",
+         "revenue",
+         "profit",
+         "loss",
+         "valuation",
+         "equity",
+         "burnrate",
+         "runway",
+       ];
+       numericFields.forEach((field) => {
+         if (startupDataToSend[field] !== "") {
+           startupDataToSend[field] = Number(startupDataToSend[field]);
+         }
+       });
+ 
+       const response = await fetch(`/api/startup/update/${params.startupId}`, {
+         method: "PUT",
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: `Bearer ${currentUser.token}`,
+         },
+         body: JSON.stringify(startupDataToSend),
+       });
+ 
+       if (!response.ok) {
+         const errorData = await response.json();
+         throw new Error(errorData.message || "Failed to submit startup data");
+       }
+ 
+       setSubmitSuccess(true);
+       setTimeout(() => {
+         navigate("/");
+       }, 3000);
     } catch (error) {
       console.error("Submission error:", error);
       setErrors((prev) => ({
         ...prev,
-        submission: error.message || "Failed to submit. Please try again.",
+        submission: error.message || "Failed to update. Please try again.",
       }));
     } finally {
       setIsSubmitting(false);
@@ -863,10 +892,10 @@ const StartUpForm = () => {
             </svg>
           </div>
           <h2 className="mt-4 text-2xl font-semibold text-white">
-            Submission Successful!
+            Updation Successful!
           </h2>
           <p className="mt-2 text-gray-300">
-            Thank you for submitting your startup information. We will review
+            Thank you for updating your startup information. We will review
             your application shortly.
           </p>
         </div>
@@ -1108,7 +1137,7 @@ const StartUpForm = () => {
                           >
                             <path
                               fillRule="evenodd"
-                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z"
+                              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
                               clipRule="evenodd"
                             />
                           </svg>
@@ -1196,11 +1225,11 @@ const StartUpForm = () => {
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                             ></path>
                           </svg>
-                          Submitting...
+                          Updating...
                         </>
                       ) : (
                         <>
-                          Submit Application
+                          Update Startup Data
                           <svg
                             className="w-4 h-4 ml-2"
                             fill="none"
@@ -1228,4 +1257,4 @@ const StartUpForm = () => {
   );
 };
 
-export default StartUpForm;
+export default UpdateStartup;
