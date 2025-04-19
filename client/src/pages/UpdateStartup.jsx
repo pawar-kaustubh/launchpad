@@ -623,7 +623,46 @@ const UpdateStartup = () => {
         userId: currentUser._id,
       };
   
-      // Rest of your submission code...
+       // Remove unnecessary fields
+       delete startupDataToSend.videoOption;
+       delete startupDataToSend.videoFile;
+       delete startupDataToSend.youtube;
+ 
+       // Convert numeric fields to numbers
+       const numericFields = [
+         "totalsales",
+         "revenue",
+         "profit",
+         "loss",
+         "valuation",
+         "equity",
+         "burnrate",
+         "runway",
+       ];
+       numericFields.forEach((field) => {
+         if (startupDataToSend[field] !== "") {
+           startupDataToSend[field] = Number(startupDataToSend[field]);
+         }
+       });
+ 
+       const response = await fetch("/api/startup/create", {
+         method: "POST",
+         headers: {
+           "Content-Type": "application/json",
+           Authorization: `Bearer ${currentUser.token}`,
+         },
+         body: JSON.stringify(startupDataToSend),
+       });
+ 
+       if (!response.ok) {
+         const errorData = await response.json();
+         throw new Error(errorData.message || "Failed to submit startup data");
+       }
+ 
+       setSubmitSuccess(true);
+       setTimeout(() => {
+         navigate("/dashboard");
+       }, 3000);
     } catch (error) {
       console.error("Submission error:", error);
       setErrors((prev) => ({
