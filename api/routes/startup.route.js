@@ -1,7 +1,7 @@
 
  import express from 'express';
  import { verifyToken } from '../utils/verifyUser.js';
-import { createStartup, deleteStartup, getStartup, updateStartup } from '../controllers/startup.controller.js';
+import { createStartup, deleteStartup, getAllStartup, getStartup, updateStartup } from '../controllers/startup.controller.js';
  
  const router = express.Router();
  
@@ -9,5 +9,6 @@ import { createStartup, deleteStartup, getStartup, updateStartup } from '../cont
  router.delete('/delete/:id', verifyToken, deleteStartup);
  router.put('/update/:id', verifyToken, updateStartup);
  router.get('/get/:id',  getStartup);
+ router.get('/getall',  getAllStartup);
  
  export default router;
