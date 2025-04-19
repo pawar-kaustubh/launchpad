@@ -645,8 +645,8 @@ const UpdateStartup = () => {
          }
        });
  
-       const response = await fetch("/api/startup/create", {
-         method: "POST",
+       const response = await fetch(`/api/startup/update/${params.startupId}`, {
+         method: "PUT",
          headers: {
            "Content-Type": "application/json",
            Authorization: `Bearer ${currentUser.token}`,
@@ -661,7 +661,7 @@ const UpdateStartup = () => {
  
        setSubmitSuccess(true);
        setTimeout(() => {
-         navigate("/dashboard");
+         navigate("/");
        }, 3000);
     } catch (error) {
       console.error("Submission error:", error);
