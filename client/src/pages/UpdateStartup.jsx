@@ -8,7 +8,7 @@ import {
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { current } from "@reduxjs/toolkit";
+
 
 const UpdateStartup = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -554,17 +554,9 @@ const UpdateStartup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    if (!validateForm()) {
-      const firstErrorField = Object.keys(errors)[0];
-      if (firstErrorField) {
-        document.getElementById(`field-${firstErrorField}`)?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }
-      return;
-    }
-  
+   
+
+    console.log("Current user")
     if (!currentUser?._id) {
       navigate("/login");
       return;
@@ -583,6 +575,8 @@ const UpdateStartup = () => {
               formData.videoOption === "file" ? formData.videoFile : null
       };
   
+
+      console.log("Step 3rd")
       if (formData.logo instanceof File) {
         uploadPromises.push(
           uploadFileToFirebase(
