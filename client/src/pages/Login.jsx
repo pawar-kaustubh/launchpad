@@ -26,9 +26,11 @@ export default function Login() {
               Discover groundbreaking startups and manage your investments all
               in one place.
             </p>
-            <button className="px-6 py-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full font-semibold hover:opacity-90 transition">
-              Continue as Investor
-            </button>
+            <Link to="/investorform">
+              <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full font-semibold hover:opacity-90 transition">
+                Continue as Investor
+              </button>
+            </Link>
           </div>
         </div>
 
