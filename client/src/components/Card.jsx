@@ -1,108 +1,159 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 
-const Card = () => {
-  const [startup, setStartup] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export default function FilterableCardGrid() {
+  const [selectedType, setSelectedType] = useState("");
+  const [hoveredCard, setHoveredCard] = useState(null);
 
+  const cards = [
+    { id: 1, name: "Tech Startup", desc: "A startup in technology", valuation: "$5M", revenue: "$500K", profitable: true, investors: "Angel Investors", type: "Technology", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+1", logoImg: "https://via.placeholder.com/100.png?text=Logo+1", fundingProgress: 70 },
+    { id: 2, name: "Management Co.", desc: "Business Management", valuation: "$10M", revenue: "$1M", profitable: false, investors: "VC Fund", type: "Management", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+2", logoImg: "https://via.placeholder.com/100.png?text=Logo+2", fundingProgress: 40 },
+    { id: 3, name: "Health Startup", desc: "Improving healthcare systems", valuation: "$8M", revenue: "$900K", profitable: true, investors: "Private Equity", type: "Healthcare", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+3", logoImg: "https://via.placeholder.com/100.png?text=Logo+3", fundingProgress: 55 },
+    { id: 4, name: "Health Startup", desc: "Improving healthcare systems", valuation: "$8M", revenue: "$900K", profitable: true, investors: "Private Equity", type: "Healthcare", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+3", logoImg: "https://via.placeholder.com/100.png?text=Logo+3", fundingProgress: 55 }
+  ];
+
+  const types = ["All", ...new Set(cards.map(c => c.type))];
+  const filtered = !selectedType || selectedType === "All"
+    ? cards
+    : cards.filter(c => c.type === selectedType);
 
   return (
-    <motion.div
-      className="p-6 rounded-2xl shadow-xl bg-white max-w-md mx-auto hover:shadow-2xl transition duration-300"
-      whileHover={{ scale: 1.02 }}
-    >
-      {/* Added image above logo and name */}
-      <img
-        src="https://imgs.search.brave.com/L_1lTohCZLsX8TLqB5z7TuKBlqbdIr5lxmE7ilJfa_k/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9yZXMu/Y2xvdWRpbmFyeS5j/b20vdmlzdGFwcmlu/dC9pbWFnZXMvdjE3/MDI2MjE5ODkvaWRl/YXMtYW5kLWFkdmlj/ZS1wcm9kL2VuLXVz/L2F0dGFjaG1lbnRf/MzA2MDI0NzAvYXR0/YWNobWVudF8zMDYw/MjQ3MC5qcGc_X2k9/QUE"
-        alt="Startup Banner"
-        className="w-full h-40 object-cover rounded-xl mb-4"
-      />
+    <div className="min-h-screen w-full bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+      <div className="w-full mx-auto p-4 flex flex-col md:flex-row gap-6 pt-20">
+        {/* Sidebar */}
+        <aside className="flex-none md:w-1/4 w-full bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-6">
+          <h3 className="text-xl font-semibold text-white mb-6">Filter Startups</h3>
+          <select
+            className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+            value={selectedType}
+            onChange={e => setSelectedType(e.target.value)}
+          >
+            {types.map(type => (
+              <option key={type} value={type === "All" ? "" : type} className="bg-gray-800">
+                {type}
+              </option>
+            ))}
+          </select>
+          
+          <div className="mt-8">
+            <h4 className="text-sm uppercase tracking-wider text-gray-400 mb-4">Startup Stats</h4>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-gray-300">Total Startups</span>
+                <span className="font-medium text-blue-400">{cards.length}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-300">Profitable</span>
+                <span className="font-medium text-green-400">
+                  {cards.filter(c => c.profitable).length}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-gray-300">Funding Avg</span>
+                <span className="font-medium text-purple-400">
+                  {Math.round(cards.reduce((acc, c) => acc + c.fundingProgress, 0) / cards.length)}%
+                </span>
+              </div>
+            </div>
+          </div>
+        </aside>
 
-      <div className="flex items-center space-x-4">
-        <img
-          src={"https://imgs.search.brave.com/nnlugCdwRztPW-JKQi0jyM-YfdcD1ZIlUmth9-cYDnA/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9pbWcu/ZnJlZXBpay5jb20v/cHJlbWl1bS1waG90/by9zdGFydHVwLWJ1/c2luZXNzLWNvbmNl/cHRfNjcwMTQ3LTc0/OTEuanBnP3NlbXQ9/YWlzX2h5YnJpZA"}
-          alt={"staup name"}
-          className="w-16 h-16 rounded-full object-cover"
-        />
-        <div>
-          <h2 className="text-xl font-bold">Startup name</h2>
-          <p className="text-sm text-gray-500">startup desc</p>
-        </div>
-      </div>
+        {/* Cards */}
+        <section className="flex-1 w-full">
+          {filtered.length === 0 ? (
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 p-8 text-center">
+              <h3 className="text-xl font-semibold text-gray-300 mb-2">No startups found</h3>
+              <p className="text-gray-500">Try adjusting your filters</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filtered.map(card => (
+                <motion.div
+                  key={card.id}
+                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-blue-400/50 transition-all overflow-hidden flex flex-col"
+                  whileHover={{ scale: 1.03 }}
+                  onMouseEnter={() => setHoveredCard(card.id)}
+                  onMouseLeave={() => setHoveredCard(null)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="relative overflow-hidden h-48">
+                    <img
+                      src={card.bannerImg}
+                      alt={`${card.name} banner`}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
+                    <span className="absolute top-4 right-4 text-xs bg-gray-900/80 text-blue-400 px-3 py-1 rounded-full border border-blue-400/20">
+                      {card.type}
+                    </span>
+                  </div>
+                  
+                  <div className="p-5 flex-grow flex flex-col">
+                    <div className="flex items-start mb-4">
+                      <div className="flex-1">
+                        <h2 className="text-xl font-semibold text-white truncate">{card.name}</h2>
+                        <p className="text-gray-400 text-sm mt-1">{card.desc}</p>
+                      </div>
+                    </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-4 text-sm text-gray-700">
-        <div>
-          <strong>Valuation:</strong> Valuation
-        </div>
-        <div>
-          <strong>Revenue:</strong> Revenue
-        </div>
-        <div>
-          <strong>Profitable:</strong>{" "}
-          <span className={true ? "text-green-600" : "text-red-600"}>
-            {true ? "Yes" : "No"}
-          </span>
-        </div>
-        <div>
-          <strong>Investors:</strong> investors
-        </div>
-      </div>
+                    <div className="mt-2 text-sm space-y-2">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Valuation</span>
+                        <span className="font-medium text-blue-400">{card.valuation}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Revenue</span>
+                        <span className="font-medium text-purple-400">{card.revenue}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Profitable</span>
+                        <span className={card.profitable ? "text-green-400 font-medium" : "text-red-400 font-medium"}>
+                          {card.profitable ? "Yes" : "No"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Investors</span>
+                        <span className="font-medium text-white truncate max-w-[120px]">{card.investors}</span>
+                      </div>
+                    </div>
 
-      <div className="mt-4">
-        <p className="text-sm text-gray-500 mb-1">Funding Progress</p>
-        <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-          <motion.div
-            className="bg-indigo-500 h-3 rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: `${70}%` }}
-            transition={{ duration: 1 }}
-          />
-        </div>
-        <p className="text-right text-xs mt-1 text-gray-600">
-          {70}%
-        </p>
+                    <div className="mt-6 pt-4 border-t border-gray-700/50">
+                      <div className="flex justify-between text-xs text-gray-400 mb-1">
+                        <span>Funding Progress</span>
+                        <span>{card.fundingProgress}%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 rounded-full h-2">
+                        <motion.div
+                          className={`h-full rounded-full ${hoveredCard === card.id ? 
+                            'bg-gradient-to-r from-blue-500 to-purple-500' : 
+                            'bg-blue-500'}`}
+                          initial={{ width: 0 }}
+                          animate={{ width: `${card.fundingProgress}%` }}
+                          transition={{ duration: 0.8, delay: 0.2 }}
+                        />
+                      </div>
+                    </div>
+
+                    <motion.button
+                      className={`mt-6 w-full py-2 rounded-lg font-medium transition-all ${
+                        hoveredCard === card.id
+                          ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
+                          : 'bg-gray-700 text-gray-300'
+                      }`}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      View Details
+                    </motion.button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
-    </motion.div>
+    </div>
   );
-};
-
-export default Card;
-
-
-
-
-  // Placeholder URL – replace with your actual API when ready
-  // const API_URL = "https://your-backend-api.com/startup"; 
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const res = await fetch(API_URL);
-  //       const data = await res.json();
-  //       setStartup(data);
-  //     } catch (err) {
-  //       setError("Failed to fetch data");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-  // if (loading) {
-  //   return (
-  //     <div className="p-6 rounded-2xl shadow-md bg-white w-full max-w-md mx-auto text-center">
-  //       <p className="text-gray-500">Loading...</p>
-  //     </div>
-  //   );
-  // }
-
-  // if (error) {
-  //   return (
-  //     <div className="p-6 rounded-2xl shadow-md bg-red-50 text-red-600 w-full max-w-md mx-auto text-center">
-  //       <p>{error}</p>
-  //     </div>
-  //   );
-  // }
+}
