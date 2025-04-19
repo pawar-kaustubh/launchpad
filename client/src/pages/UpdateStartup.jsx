@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import {
   getDownloadURL,
   getStorage,
@@ -8,7 +8,6 @@ import {
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-
 
 const UpdateStartup = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -37,13 +36,10 @@ const UpdateStartup = () => {
     logo: null,
     coverImage: null,
     videoOption: "",
-    videoFile: null,
   });
 
   const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
-
   const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-  const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/quicktime"];
 
   const countries = [
     "Afghanistan",
@@ -269,7 +265,6 @@ const UpdateStartup = () => {
   const [uploadProgress, setUploadProgress] = useState({
     logo: 0,
     coverImage: 0,
-    videoFile: 0,
   });
   const currentUser = useSelector((state) => state.user.currentUser);
   const navigate = useNavigate();
@@ -277,18 +272,18 @@ const UpdateStartup = () => {
 
   useEffect(() => {
     const fetchStartup = async () => {
-        const startupId = params.startupId;
-        const res = await fetch(`/api/startup/get/${startupId}`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${currentUser.token}`,
-            },
-          });
-        if (!res.ok) {
-          throw new Error("Failed to fetch startup data");
-        }
-        const data = await res.json();
-        setFormData(data);
+      const startupId = params.startupId;
+      const res = await fetch(`/api/startup/get/${startupId}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Failed to fetch startup data");
+      }
+      const data = await res.json();
+      setFormData(data);
     };
     fetchStartup();
   }, []);
@@ -305,43 +300,30 @@ const UpdateStartup = () => {
   }, []);
 
   useEffect(() => {
-    const totalFields = Object.keys(formData).length - 1;
+    const totalFields = Object.keys(formData).length;
     const filledFields = Object.values(formData).filter(
       (value) =>
         (value !== "" && value !== null) ||
         (value && typeof value === "object" && value.name) ||
         value === "youtube" ||
-        value === "file" ||
         value === "later"
     ).length;
     const calculatedProgress = Math.round((filledFields / totalFields) * 100);
-    setProgress(filledFields > 0 ? calculatedProgress : 0);
+    setProgress(calculatedProgress);
   }, [formData]);
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
 
-    // Handle file inputs with validation
     if (type === "file") {
       const file = files[0];
       if (!file) return;
 
       let error = "";
-
-      // Validate file type and size
-      if (name === "logo" || name === "coverImage") {
-        if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-          error = "Only JPEG, PNG, or WebP images are allowed";
-        } else if (file.size > MAX_FILE_SIZE) {
-          error = "Image size must be less than 10MB";
-        }
-      } else if (name === "videoFile") {
-        if (!ALLOWED_VIDEO_TYPES.includes(file.type)) {
-          error = "Only MP4, WebM, or QuickTime videos are allowed";
-        } else if (file.size > 5 * MAX_FILE_SIZE) {
-          // 50MB for videos
-          error = "Video size must be less than 50MB";
-        }
+      if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+        error = "Only JPEG, PNG, or WebP images are allowed";
+      } else if (file.size > MAX_FILE_SIZE) {
+        error = "Image size must be less than 2MB";
       }
 
       if (error) {
@@ -363,9 +345,8 @@ const UpdateStartup = () => {
       ...prev,
       videoOption: value,
       youtube: value === "youtube" ? prev.youtube : "",
-      videoFile: value === "file" ? prev.videoFile : null,
     }));
-    setErrors((prev) => ({ ...prev, youtube: "", videoFile: "" }));
+    setErrors((prev) => ({ ...prev, youtube: "" }));
   };
 
   const validateField = (name, value) => {
@@ -465,10 +446,6 @@ const UpdateStartup = () => {
         )
           return "Invalid YouTube URL";
         break;
-      case "videoFile":
-        if (formData.videoOption === "file" && !value)
-          return "Video file is required";
-        break;
       default:
         if (!value) return "This field is required";
     }
@@ -479,10 +456,9 @@ const UpdateStartup = () => {
     let isValid = true;
     const newErrors = {};
 
-    // Validate all fields
     Object.keys(formData).forEach((field) => {
-      if (field === "logo" || field === "coverImage" || field === "videoFile") {
-        if ((field === "logo" || field === "coverImage") && !formData[field]) {
+      if (field === "logo" || field === "coverImage") {
+        if (!formData[field]) {
           newErrors[field] = `${
             field === "logo" ? "Logo" : "Cover image"
           } is required`;
@@ -497,7 +473,6 @@ const UpdateStartup = () => {
       }
     });
 
-    // Special validation for video option
     if (!formData.videoOption) {
       newErrors.videoOption = "Please select a video option";
       isValid = false;
@@ -553,62 +528,51 @@ const UpdateStartup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-   
 
-    console.log("Current user")
     if (!currentUser?._id) {
       navigate("/login");
       return;
     }
-  
+
+   
+
     setIsSubmitting(true);
     setErrors({});
-  
+
     try {
-      // Only upload files if they are new (File objects)
       const uploadPromises = [];
       const result = {
         logo: formData.logo,
         coverImage: formData.coverImage,
-        video: formData.videoOption === "youtube" ? formData.youtube : 
-              formData.videoOption === "file" ? formData.videoFile : null
+        video: formData.videoOption === "youtube" ? formData.youtube : null,
       };
-  
 
-      console.log("Step 3rd")
       if (formData.logo instanceof File) {
         uploadPromises.push(
           uploadFileToFirebase(
             formData.logo,
             `startups/${currentUser._id}/logo/${formData.logo.name}`,
             "logo"
-          ).then(url => { result.logo = url })
+          ).then((url) => {
+            result.logo = url;
+          })
         );
       }
-  
+
       if (formData.coverImage instanceof File) {
         uploadPromises.push(
           uploadFileToFirebase(
             formData.coverImage,
             `startups/${currentUser._id}/cover/${formData.coverImage.name}`,
             "coverImage"
-          ).then(url => { result.coverImage = url })
+          ).then((url) => {
+            result.coverImage = url;
+          })
         );
       }
-  
-      if (formData.videoOption === "file" && formData.videoFile instanceof File) {
-        uploadPromises.push(
-          uploadFileToFirebase(
-            formData.videoFile,
-            `startups/${currentUser._id}/video/${formData.videoFile.name}`,
-            "videoFile"
-          ).then(url => { result.video = url })
-        );
-      }
-  
+
       await Promise.all(uploadPromises);
-  
+
       const startupDataToSend = {
         ...formData,
         logo: result.logo,
@@ -616,47 +580,44 @@ const UpdateStartup = () => {
         video: result.video,
         userId: currentUser._id,
       };
-  
-       // Remove unnecessary fields
-       delete startupDataToSend.videoOption;
-       delete startupDataToSend.videoFile;
-       delete startupDataToSend.youtube;
- 
-       // Convert numeric fields to numbers
-       const numericFields = [
-         "totalsales",
-         "revenue",
-         "profit",
-         "loss",
-         "valuation",
-         "equity",
-         "burnrate",
-         "runway",
-       ];
-       numericFields.forEach((field) => {
-         if (startupDataToSend[field] !== "") {
-           startupDataToSend[field] = Number(startupDataToSend[field]);
-         }
-       });
- 
-       const response = await fetch(`/api/startup/update/${params.startupId}`, {
-         method: "PUT",
-         headers: {
-           "Content-Type": "application/json",
-           Authorization: `Bearer ${currentUser.token}`,
-         },
-         body: JSON.stringify(startupDataToSend),
-       });
- 
-       if (!response.ok) {
-         const errorData = await response.json();
-         throw new Error(errorData.message || "Failed to submit startup data");
-       }
- 
-       setSubmitSuccess(true);
-       setTimeout(() => {
-         navigate("/");
-       }, 3000);
+
+      delete startupDataToSend.videoOption;
+      delete startupDataToSend.youtube;
+
+      const numericFields = [
+        "totalsales",
+        "revenue",
+        "profit",
+        "loss",
+        "valuation",
+        "equity",
+        "burnrate",
+        "runway",
+      ];
+      numericFields.forEach((field) => {
+        if (startupDataToSend[field] !== "") {
+          startupDataToSend[field] = Number(startupDataToSend[field]);
+        }
+      });
+
+      const response = await fetch(`/api/startup/update/${params.startupId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+        body: JSON.stringify(startupDataToSend),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to submit startup data");
+      }
+
+      setSubmitSuccess(true);
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
     } catch (error) {
       console.error("Submission error:", error);
       setErrors((prev) => ({
@@ -831,7 +792,6 @@ const UpdateStartup = () => {
           name: "videoOption",
           options: [
             { value: "youtube", label: "YouTube Link" },
-            { value: "file", label: "Upload Video" },
             { value: "later", label: "Add Later" },
           ],
           onChange: handleVideoOptionChange,
@@ -844,26 +804,19 @@ const UpdateStartup = () => {
           hidden: formData.videoOption !== "youtube",
         },
         {
-          label: "Upload Video File (max 50MB)",
-          type: "file",
-          name: "videoFile",
-          accept: "video/*",
-          hidden: formData.videoOption !== "file",
-        },
-        {
           label: "Link to Pitch Deck",
           type: "url",
           name: "pitchdeck",
           placeholder: "Google Drive, Dropbox, etc.",
         },
         {
-          label: "Startup Logo (max 10MB)",
+          label: "Startup Logo (max 2MB)",
           type: "file",
           name: "logo",
           accept: "image/*",
         },
         {
-          label: "Cover Image (max 10MB)",
+          label: "Cover Image (max 2MB)",
           type: "file",
           name: "coverImage",
           accept: "image/*",
@@ -892,11 +845,11 @@ const UpdateStartup = () => {
             </svg>
           </div>
           <h2 className="mt-4 text-2xl font-semibold text-white">
-            Updation Successful!
+            Update Successful!
           </h2>
           <p className="mt-2 text-gray-300">
-            Thank you for updating your startup information. We will review
-            your application shortly.
+            Thank you for updating your startup information. We will review your
+            application shortly.
           </p>
         </div>
       </div>
@@ -905,7 +858,6 @@ const UpdateStartup = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white overflow-x-hidden">
-      {/* Floating particles */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div
           className="absolute rounded-full bg-gradient-to-br from-blue-400/50 to-purple-500/40 blur-[70px]"
@@ -934,11 +886,10 @@ const UpdateStartup = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="bg-gray-800/70 backdrop-blur-sm rounded-xl border border-gray-700 overflow-hidden max-w-4xl mx-auto">
           <h1 className="text-2xl sm:text-3xl font-bold text-center p-6 bg-gradient-to-r from-blue-600 to-purple-600">
-            Startup Registration Form
+            Startup Update Form
           </h1>
 
           <div className="p-6">
-            {/* Progress bar with tabs */}
             <div className="mb-8">
               <div className="flex flex-wrap gap-2 mb-4">
                 {formSections.map((section, index) => (
@@ -972,7 +923,6 @@ const UpdateStartup = () => {
               </div>
             </div>
 
-            {/* Form content */}
             <form onSubmit={handleSubmit} className="space-y-6">
               {errors.submission && (
                 <div className="p-4 bg-red-900/30 border border-red-700 rounded-lg">
@@ -1229,7 +1179,7 @@ const UpdateStartup = () => {
                         </>
                       ) : (
                         <>
-                          Update Startup Data
+                          Update timetable Data
                           <svg
                             className="w-4 h-4 ml-2"
                             fill="none"
