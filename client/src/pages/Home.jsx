@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef, Component } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
-import Navbar from "../components/Navbar";
 
 // ======================
 // Error Boundary Component

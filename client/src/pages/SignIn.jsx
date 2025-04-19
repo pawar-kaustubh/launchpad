@@ -3,11 +3,15 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { signInStart,signInSuccess,signInFailure } from "../redux/user/userSlice";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
 const SignIn = () => {
   const [formData, setFormData] = React.useState({});
- const {loading,error} = useSelector((state) => state.user);  
+  const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleChange = (e) => {
@@ -20,7 +24,7 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(signInStart())
+      dispatch(signInStart());
       const res = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -30,16 +34,15 @@ const SignIn = () => {
       });
       const data = await res.json();
       if (data.success === false) {
-    dispatch(signInFailure(data.message))
+        dispatch(signInFailure(data.message));
         return;
       }
-  dispatch(signInSuccess(data))
-      navigate('/')
+      dispatch(signInSuccess(data));
+      navigate("/");
     } catch (error) {
-     dispatch(signInFailure(error.message))
+      dispatch(signInFailure(error.message));
     }
   };
-  
 
   return (
     <StyledWrapper>
@@ -64,35 +67,31 @@ const SignIn = () => {
             required
             onChange={handleChange}
           />
-         
+
           <span className="forgot-password">
             <a href="#">Forgot Password ?</a>
           </span>
-          <button disabled={loading} type="submit" value="Sign Up" className="login-button" >
+          <button
+            disabled={loading}
+            type="submit"
+            value="Sign Up"
+            className="login-button"
+          >
             {loading ? "Loading..." : "Sign In"}
           </button>
-          <OAuth/>
         </form>
         <div className="social-account-container">
           <span className="title">Or Sign in with</span>
           <div className="social-accounts">
-            <button className="social-button google">
-              <svg
-                viewBox="0 0 488 512"
-                height="1em"
-                xmlns="http://www.w3.org/2000/svg"
-                className="svg"
-              >
-                <path d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z" />
-              </svg>
-            </button>
+            <OAuth />
           </div>
         </div>
+
         <div>
-        <span className="agreement">
-          <p>Don't have an account</p>
-          <Link to={"/signup"}>Sign Up</Link>
-        </span>
+          <span className="agreement">
+            <p>Don't have an account</p>
+            <Link to={"/signup"}>Sign Up</Link>
+          </span>
         </div>
         {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
       </div>
