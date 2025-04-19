@@ -7,7 +7,7 @@ import SignUp from "./pages/SignUp";
 import ExploreStartUp from "./pages/ExploreStartUp";
 import StartUpDetails from "./pages/StartUpDetails";
 import StartUpForm from "./pages/StartUpForm";
-
+import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import InvestorForm from "./pages/InvestorForm";
@@ -25,6 +25,7 @@ export default function App() {
         <Route path="/startupdetails" element={<StartUpDetails />} />
         <Route path="/startupform" element={<StartUpForm />} />
         <Route path="/investorform" element={<InvestorForm />} />
+        <Route path="/login" element={<Login />} />
         <Route element={<PrivateRoute />}>
            <Route path='/profile' element={<Profile />} />
          </Route>
