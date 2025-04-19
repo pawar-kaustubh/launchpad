@@ -24,8 +24,7 @@ export default function App() {
         <Route path="/explorestartups" element={<ExploreStartUp />} />
         <Route path="/startupdetails" element={<StartUpDetails />} />
         <Route path="/startupform" element={<StartUpForm />} />
-
-
+        <Route path="/investorform" element={<InvestorForm />} />
         <Route element={<PrivateRoute />}>
            <Route path='/profile' element={<Profile />} />
          </Route>
