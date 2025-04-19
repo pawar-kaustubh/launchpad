@@ -6,6 +6,7 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import { Link } from "react-router-dom";
 import { app } from "../firebase";
 import {
   updateUserStart,
@@ -26,6 +27,8 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
+  const [showStartupsError, setShowStartupsError] = useState(false);
+  const [userStartups, setUserStartups] = useState([]);
 
   // firebase storage
   // allow read;
@@ -120,6 +123,40 @@ export default function Profile() {
       dispatch(deleteUserFailure(data.message));
     }
   };
+
+  const handleShowStartups = async () => {
+    try {
+      setShowStartupsError(false);
+      const res = await fetch(`/api/user/startups/${currentUser._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        setShowStartupsError(true);
+        return;
+      }
+
+      setUserStartups(data);
+    } catch (error) {
+      setShowStartupsError(true);
+    }
+  };
+  const handleStartupDelete = async (startupId) => {
+    try {
+      const res = await fetch(`/api/startup/delete/${startupId}`, {
+        method: 'DELETE',
+      });
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+
+      setUserStartups((prev) =>
+        prev.filter((startup) => startup._id !== startupId)
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -179,6 +216,12 @@ export default function Profile() {
         >
           {loading ? "Loading..." : "Update"}
         </button>
+        <Link
+          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
+          to={"/startupform"}
+        >
+          Create Startups
+        </Link>
       </form>
       <div className="flex justify-between mt-5">
         <span
@@ -196,6 +239,50 @@ export default function Profile() {
       <p className="text-green-700 mt-5">
         {updateSuccess ? "User is updated successfully!" : ""}
       </p>
+      <button onClick={handleShowStartups} className="text-green-700 w-full">
+        Show Startups
+      </button>
+      <p className="text-red-700 mt-5">
+        {showStartupsError ? "Error showing startups" : ""}
+      </p>
+
+      {userStartups && userStartups.length > 0 && (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-2xl font-semibold">
+            Your Startups
+          </h1>
+          {userStartups.map((startup) => (
+            <div
+              key={startup._id}
+              className="border rounded-lg p-3 flex justify-between items-center gap-4"
+            >
+              <Link to={`/startup/${startup._id}`}>
+                <img
+                  src={startup.coverImage[0]}
+                  alt="startup cover"
+                  className="h-16 w-16 object-contain"
+                />
+              </Link>
+              <Link
+                className="text-slate-700 font-semibold  hover:underline truncate flex-1"
+                to={`/startup/${startup._id}`}
+              >
+                <p>{startup.name}</p>
+              </Link>
+
+              <div className="flex flex-col item-center">
+              <button
+                   onClick={() => handleStartupDelete(startup._id)}
+                   className='text-red-700 uppercase'
+                 >
+                   Delete
+                 </button>
+                <button className="text-green-700 uppercase">Edit</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
