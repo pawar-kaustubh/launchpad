@@ -2,43 +2,37 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-
 export default function FilterableCardGrid() {
   const [selectedType, setSelectedType] = useState("");
-
-  
-
   const [hoveredCard, setHoveredCard] = useState(null);
-
-  const [cards, setCards ] = useState([]);
+  const [cards, setCards] = useState([]);
   const navigate = useNavigate();
 
-  const showDetails = (id) =>{
-    navigate(`/startupdetails/${id}`)
-  }
- 
+  const showDetails = (id) => {
+    navigate(`/startupdetails/${id}`);
+  };
 
-const types1 =  ["SaaS","e-commers"]
   useEffect(() => {
     const fetchStartups = async () => {
       try {
         const response = await fetch("http://localhost:3000/api/startup/getall");
         const data = await response.json();
-        // console.log(data)
         setCards(data.startups);
-    
       } catch (error) {
         console.error("Error fetching startups:", error);
       }
     };
 
-    fetchStartups(); }, []);
-  
-  const types = ["All", ...new Set(types1.map((c) => c))];
+    fetchStartups();
+  }, []);
+
+  // Extract unique types from the actual cards data
+  const types = ["All", ...new Set(cards.map((c) => c.industry))]; // Changed from 'type' to 'industry' to match your data
+
   const filtered =
     !selectedType || selectedType === "All"
       ? cards
-      : cards.filter((c) => c.type === selectedType);
+      : cards.filter((c) => c.industry === selectedType); // Changed from 'type' to 'industry'
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-gray-900 to-gray-800 text-white">
@@ -78,19 +72,19 @@ const types1 =  ["SaaS","e-commers"]
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Profitable</span>
                 <span className="font-medium text-green-400">
-                  {cards.filter((c) => c.profitable).length}
+                  {cards.filter((c) => c.profit).length}
                 </span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Funding Avg</span>
                 <span className="font-medium text-purple-400">
-
-                  {Math.round(
-                    cards.reduce((acc, c) => acc + c.fundingProgress, 0) /
-                      cards.length
-                  )}
+                  {cards.length > 0
+                    ? Math.round(
+                        cards.reduce((acc, c) => acc + (c.fundingProgress || 0), 0) /
+                        cards.length
+                    )
+                    : 0}
                   %
-
                 </span>
               </div>
             </div>
@@ -113,23 +107,22 @@ const types1 =  ["SaaS","e-commers"]
                   key={card?._id}
                   className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-blue-400/50 transition-all overflow-hidden flex flex-col"
                   whileHover={{ scale: 1.03 }}
-                  onMouseEnter={() => setHoveredCard(card?.id)}
+                  onMouseEnter={() => setHoveredCard(card?._id)}
                   onMouseLeave={() => setHoveredCard(null)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="relative overflow-hidden h-48" 
-                      >
+                  <div className="relative overflow-hidden h-48">
                     <img
                       src={card?.bannerImg}
-                      alt={`${card?.name} banner`}
+                      alt={`${card?.startupname} banner`}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
                     <span className="absolute top-4 right-4 text-xs bg-gray-900/80 text-blue-400 px-3 py-1 rounded-full border border-blue-400/20">
                       {card.industry}
-                    </span> 
+                    </span>
                   </div>
 
                   <div className="p-5 flex-grow flex flex-col">
@@ -141,14 +134,12 @@ const types1 =  ["SaaS","e-commers"]
                         <p className="text-gray-400 text-sm mt-1">
                           {card.startupdesc}
                         </p>
-
                       </div>
                     </div>
 
                     <div className="mt-2 text-sm space-y-2">
                       <div className="flex justify-between">
                         <span className="text-gray-400">Valuation</span>
-
                         <span className="font-medium text-blue-400">
                           {card.valuation}
                         </span>
@@ -173,45 +164,40 @@ const types1 =  ["SaaS","e-commers"]
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Investors</span>
-
                         <span className="font-medium text-white truncate max-w-[120px]">
                           {card.investors}
                         </span>
-
                       </div>
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-gray-700/50">
                       <div className="flex justify-between text-xs text-gray-400 mb-1">
                         <span>Funding Progress</span>
-                        <span>{card?.fundingProgress}%</span>
+                        <span>{card?.fundingProgress || 0}%</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-2">
                         <motion.div
                           className={`h-full rounded-full ${
-                            hoveredCard === cards._id
+                            hoveredCard === card._id
                               ? "bg-gradient-to-r from-blue-500 to-purple-500"
                               : "bg-blue-500"
                           }`}
-
                           initial={{ width: 0 }}
-                          animate={{ width: `${card.fundingProgress}%` }}
+                          animate={{ width: `${card.fundingProgress || 0}%` }}
                           transition={{ duration: 0.8, delay: 0.2 }}
                         />
                       </div>
                     </div>
 
                     <motion.button
-             
                       className={`mt-6 w-full py-2 rounded-lg font-medium transition-all ${
-                        
                         hoveredCard === card._id
                           ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
                           : "bg-gray-700 text-gray-300"
                       }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={ ()=>showDetails(card._id)} 
+                      onClick={() => showDetails(card._id)}
                     >
                       View Details
                     </motion.button>

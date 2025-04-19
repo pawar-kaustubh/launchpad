@@ -29,10 +29,10 @@ const StartUpDetails = () => {
         // Fetch by ID
         const fetchStartup = async () => {
           try {
-            console.log("hii")
+          
             const res = await fetch(`http://localhost:3000/api/startup/get/${id}`);
             const data = await res.json();
-            console.log(data)
+           
             setStartup(data);
            
           } catch (err) {
@@ -526,7 +526,7 @@ const StartUpDetails = () => {
               </p>
             </div>
 
-            <div className="p-6 border-b border-gray-700">
+            {/* <div className="p-6 border-b border-gray-700">
               <label className="block text-gray-300 mb-2">
                 Your Investment Criteria
               </label>
@@ -537,15 +537,15 @@ const StartUpDetails = () => {
                 rows="4"
                 className="w-full bg-gray-700/50 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
-            </div>
+            </div> */}
 
             <div className="p-6">
               <button
                 onClick={handleGenerateSummary}
-                disabled={isLoading || !criteria}
+                // disabled={isLoading || !criteria}
                 className={`w-full py-3 px-4 rounded-lg font-medium transition-all ${
                   isLoading || !criteria
-                    ? "bg-gray-600 cursor-not-allowed"
+                    ? "bg-gray-600 cursor-pointer"
                     : "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 shadow-lg hover:shadow-xl"
                 }`}
               >
@@ -574,7 +574,7 @@ const StartUpDetails = () => {
                       </p>
                     ))}
                   </div>
-                  <div className="flex gap-3 mt-4">
+                  {/* <div className="flex gap-3 mt-4">
                     <button className="flex-1 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg flex items-center justify-center gap-2 transition">
                       <svg
                         className="w-4 h-4"
@@ -607,7 +607,7 @@ const StartUpDetails = () => {
                       </svg>
                       Share
                     </button>
-                  </div>
+                  </div> */}
                 </div>
               )}
 
