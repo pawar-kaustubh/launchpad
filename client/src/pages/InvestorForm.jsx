@@ -233,7 +233,7 @@ const InvestorForm = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 py-8 px-4 sm:px-6 lg:px-8 mt-15">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
         {/* Header with progress */}
         <div className="bg-gradient-to-r from-blue-600 to-green-700 py-6 px-6 relative">
