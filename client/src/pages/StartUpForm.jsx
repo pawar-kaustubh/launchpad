@@ -29,6 +29,37 @@ const StartUpForm = () => {
     videoOption: "", // Default to empty, user must select
     videoFile: null,
   });
+
+
+  const countries = [
+    "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", 
+    "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", 
+    "Belgium", "Belize", "Benin", "Bhutan", "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", 
+    "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cabo Verde", "Cambodia", "Cameroon", "Canada", 
+    "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo (Brazzaville)", 
+    "Congo (Kinshasa)", "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", 
+    "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", 
+    "Estonia", "Eswatini", "Ethiopia", "Fiji", "Finland", "France", "Gabon", "Gambia", "Georgia", 
+    "Germany", "Ghana", "Greece", "Grenada", "Guatemala", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", 
+    "Honduras", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Israel", "Italy", 
+    "Jamaica", "Japan", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Kuwait", "Kyrgyzstan", "Laos", 
+    "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", 
+    "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Mauritania", 
+    "Mauritius", "Mexico", "Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Morocco", 
+    "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Zealand", "Nicaragua", 
+    "Niger", "Nigeria", "North Korea", "North Macedonia", "Norway", "Oman", "Pakistan", "Palau", 
+    "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Poland", "Portugal", 
+    "Qatar", "Romania", "Russia", "Rwanda", "Saint Kitts and Nevis", "Saint Lucia", 
+    "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", 
+    "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Slovakia", "Slovenia", 
+    "Solomon Islands", "Somalia", "South Africa", "South Korea", "South Sudan", "Spain", "Sri Lanka", 
+    "Sudan", "Suriname", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", 
+    "Thailand", "Timor-Leste", "Togo", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", 
+    "Turkmenistan", "Tuvalu", "Uganda", "Ukraine", "United Arab Emirates", "United Kingdom", 
+    "United States", "Uruguay", "Uzbekistan", "Vanuatu", "Vatican City", "Venezuela", "Vietnam", 
+    "Yemen", "Zambia", "Zimbabwe"
+  ].sort();
+
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -147,7 +178,13 @@ const StartUpForm = () => {
         { label: "Startup Name", type: "text", name: "startupname", placeholder: "What's your venture called?" },
         { label: "Brief Description", type: "textarea", name: "startupdesc", placeholder: "Describe your startup in 1-2 sentences" },
         { label: "Email Address", type: "email", name: "email", placeholder: "contact@yourstartup.com" },
-        { label: "Country", type: "text", name: "country", placeholder: "Where are you based?" },
+        { 
+          label: "Country", 
+          type: "select", 
+          name: "country", 
+          options: countries, 
+          placeholder: "Select your country" 
+        },
         { label: "Location", type: "text", name: "location", placeholder: "City, State/Region" },
         { label: "Website", type: "url", name: "website", placeholder: "https://yourstartup.com" },
         { label: "Phone Number", type: "tel", name: "phone", placeholder: "1234567890" },
@@ -180,7 +217,7 @@ const StartUpForm = () => {
       title: "Media & Documents",
       icon: "📷",
       fields: [
-        { label: "Link to Pitch Deck", type: "url", name: "pitchdeck", placeholder: "Link to your investor deck" },
+       
         { label: "Pitch Video Option", type: "select", name: "videoOption", options: ["youtube", "file", "later"], onChange: handleVideoOptionChange },
         { label: "YouTube Video Link", type: "url", name: "youtube", placeholder: "https://youtube.com/watch?v=...", hidden: formData.videoOption !== "youtube" },
         { label: "Upload Video File", type: "file", name: "videoFile", accept: "video/*", hidden: formData.videoOption !== "file" },
@@ -220,7 +257,7 @@ const StartUpForm = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-8 px-4 sm:px-6 lg:px-8 mt-15">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl">
         <div className="bg-gradient-to-r from-indigo-600 to-blue-700 py-6 px-6 relative">
           <div className="absolute top-0 left-0 h-1 bg-gray-300 transition-all duration-300" style={{ width: `${progress}%`, background: progress > 0 ? "linear-gradient(to right, #4B5EFC, #7B61FF)" : "#D1D5DB" }}></div>
