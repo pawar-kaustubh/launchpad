@@ -79,10 +79,17 @@ const startupSchema = new mongoose.Schema(
     runway: {
       type: Number,
       required: true,
+    },logo:{
+      type: String,
+      required: true,
+    },
+    coverImage:{
+      type: String,
+      required: true,
     },
     youtube: {
       type: String,
-      required: true,
+     
     },
   },
   { timestamps: true }
