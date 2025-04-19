@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon api/index.js",
-    "start": "node pai.index.js"
+    "start": "node api/index.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +21,8 @@
   "description": "",
   "dependencies": {
     "@google/generative-ai": "^0.24.0",
+    "@react-three/drei": "^10.0.6",
+    "@react-three/fiber": "^9.1.2",
     "bcryptjs": "^3.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
@@ -28,7 +30,9 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
-    "nodemon": "^3.1.9",
     "three": "^0.175.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
 }
