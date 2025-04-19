@@ -3,13 +3,14 @@ import { motion } from "framer-motion";
 
 export default function FilterableCardGrid() {
   const [selectedType, setSelectedType] = useState("");
+
   const [hoveredCard, setHoveredCard] = useState(null);
 
   const cards = [
-    { id: 1, name: "Tech Startup", desc: "A startup in technology", valuation: "$5M", revenue: "$500K", profitable: true, investors: "Angel Investors", type: "Technology", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+1", logoImg: "https://via.placeholder.com/100.png?text=Logo+1", fundingProgress: 70 },
-    { id: 2, name: "Management Co.", desc: "Business Management", valuation: "$10M", revenue: "$1M", profitable: false, investors: "VC Fund", type: "Management", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+2", logoImg: "https://via.placeholder.com/100.png?text=Logo+2", fundingProgress: 40 },
-    { id: 3, name: "Health Startup", desc: "Improving healthcare systems", valuation: "$8M", revenue: "$900K", profitable: true, investors: "Private Equity", type: "Healthcare", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+3", logoImg: "https://via.placeholder.com/100.png?text=Logo+3", fundingProgress: 55 },
-    { id: 4, name: "Health Startup", desc: "Improving healthcare systems", valuation: "$8M", revenue: "$900K", profitable: true, investors: "Private Equity", type: "Healthcare", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+3", logoImg: "https://via.placeholder.com/100.png?text=Logo+3", fundingProgress: 55 }
+     { id: 1, name: "Tech Startup", desc: "A startup in technology", valuation: "$5M", revenue: "$500K", profitable: true, investors: "Angel Investors", type: "Technology", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+1", logoImg: "https://via.placeholder.com/100.png?text=Logo+1", fundingProgress: 70 },
+     { id: 2, name: "Management Co.", desc: "Business Management", valuation: "$10M", revenue: "$1M", profitable: false, investors: "VC Fund", type: "Management", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+2", logoImg: "https://via.placeholder.com/100.png?text=Logo+2", fundingProgress: 40 },
+    // { id: 3, name: "Health Startup", desc: "Improving healthcare systems", valuation: "$8M", revenue: "$900K", profitable: true, investors: "Private Equity", type: "Healthcare", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+3", logoImg: "https://via.placeholder.com/100.png?text=Logo+3", fundingProgress: 55 },
+    // { id: 4, name: "Health Startup", desc: "Improving healthcare systems", valuation: "$8M", revenue: "$900K", profitable: true, investors: "Private Equity", type: "Healthcare", bannerImg: "https://via.placeholder.com/600x200.png?text=Banner+3", logoImg: "https://via.placeholder.com/100.png?text=Logo+3", fundingProgress: 55 }
   ];
 
   const types = ["All", ...new Set(cards.map(c => c.type))];
@@ -40,7 +41,7 @@ export default function FilterableCardGrid() {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Total Startups</span>
-                <span className="font-medium text-blue-400">{cards.length}</span>
+                <span className="font-medium text-blue-400">{cards?.length}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Profitable</span>
@@ -51,7 +52,7 @@ export default function FilterableCardGrid() {
               <div className="flex justify-between items-center">
                 <span className="text-gray-300">Funding Avg</span>
                 <span className="font-medium text-purple-400">
-                  {Math.round(cards.reduce((acc, c) => acc + c.fundingProgress, 0) / cards.length)}%
+                 { Math.round(cards?.reduce((acc, c) => acc + c.fundingProgress, 0) / cards?.length) ? Math.round(cards?.reduce((acc, c) => acc + c.fundingProgress, 0) / cards?.length): "0% "}
                 </span>
               </div>
             </div>
@@ -67,12 +68,12 @@ export default function FilterableCardGrid() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filtered.map(card => (
+              {filtered?.map(card => (
                 <motion.div
-                  key={card.id}
+                  key={card?.id}
                   className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-blue-400/50 transition-all overflow-hidden flex flex-col"
                   whileHover={{ scale: 1.03 }}
-                  onMouseEnter={() => setHoveredCard(card.id)}
+                  onMouseEnter={() => setHoveredCard(card?.id)}
                   onMouseLeave={() => setHoveredCard(null)}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -80,8 +81,8 @@ export default function FilterableCardGrid() {
                 >
                   <div className="relative overflow-hidden h-48">
                     <img
-                      src={card.bannerImg}
-                      alt={`${card.name} banner`}
+                      src={card?.bannerImg}
+                      alt={`${card?.name} banner`}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent" />
@@ -93,40 +94,40 @@ export default function FilterableCardGrid() {
                   <div className="p-5 flex-grow flex flex-col">
                     <div className="flex items-start mb-4">
                       <div className="flex-1">
-                        <h2 className="text-xl font-semibold text-white truncate">{card.name}</h2>
-                        <p className="text-gray-400 text-sm mt-1">{card.desc}</p>
+                        <h2 className="text-xl font-semibold text-white truncate">{card?.name}</h2>
+                        <p className="text-gray-400 text-sm mt-1">{card?.desc}</p>
                       </div>
                     </div>
 
                     <div className="mt-2 text-sm space-y-2">
                       <div className="flex justify-between">
                         <span className="text-gray-400">Valuation</span>
-                        <span className="font-medium text-blue-400">{card.valuation}</span>
+                        <span className="font-medium text-blue-400">{card?.valuation}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Revenue</span>
-                        <span className="font-medium text-purple-400">{card.revenue}</span>
+                        <span className="font-medium text-purple-400">{card?.revenue}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Profitable</span>
-                        <span className={card.profitable ? "text-green-400 font-medium" : "text-red-400 font-medium"}>
-                          {card.profitable ? "Yes" : "No"}
+                        <span className={card?.profitable ? "text-green-400 font-medium" : "text-red-400 font-medium"}>
+                          {card?.profitable ? "Yes" : "No"}
                         </span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Investors</span>
-                        <span className="font-medium text-white truncate max-w-[120px]">{card.investors}</span>
+                        <span className="font-medium text-white truncate max-w-[120px]">{card?.investors}</span>
                       </div>
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-gray-700/50">
                       <div className="flex justify-between text-xs text-gray-400 mb-1">
                         <span>Funding Progress</span>
-                        <span>{card.fundingProgress}%</span>
+                        <span>{card?.fundingProgress}%</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-2">
                         <motion.div
-                          className={`h-full rounded-full ${hoveredCard === card.id ? 
+                          className={`h-full rounded-full ${hoveredCard === card?.id ? 
                             'bg-gradient-to-r from-blue-500 to-purple-500' : 
                             'bg-blue-500'}`}
                           initial={{ width: 0 }}
@@ -138,7 +139,7 @@ export default function FilterableCardGrid() {
 
                     <motion.button
                       className={`mt-6 w-full py-2 rounded-lg font-medium transition-all ${
-                        hoveredCard === card.id
+                        hoveredCard === card?.id
                           ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white'
                           : 'bg-gray-700 text-gray-300'
                       }`}
