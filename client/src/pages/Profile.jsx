@@ -262,12 +262,13 @@ export default function Profile() {
                   alt="startup cover"
                   className="h-16 w-16 object-contain"
                 />
+
               </Link>
               <Link
                 className="text-slate-700 font-semibold  hover:underline truncate flex-1"
                 to={`/startup/${startup._id}`}
               >
-                <p>{startup.name}</p>
+                <p>{startup.startupname}</p>
               </Link>
 
               <div className="flex flex-col item-center">
