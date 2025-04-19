@@ -1,3 +1,4 @@
+import { start } from "repl";
 import Startup from "../models/startup.model.js";
 import { errorHandler } from "../utils/error.js";
 import {askGeminiInvestor} from "../utils/gemini.js"; // ✅ Import Gemini
@@ -77,3 +78,4 @@ export const analyzeStartup = async (req, res, next) => {
     next(err);
   }
 };
+
