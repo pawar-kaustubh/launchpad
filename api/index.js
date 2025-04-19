@@ -14,7 +14,11 @@ import authRouter from "./routes/auth.route.js";
 import cookieParser from 'cookie-parser';
 import startupRouter from "./routes/startup.route.js";
 
+import cors from "cors"
+dotenv.config();
+
 // MongoDB Connection
+
 mongoose
   .connect(process.env.MONGO)
   .then(() => {
@@ -32,6 +36,10 @@ app.use(cookieParser());
 app.listen(3000, () => {
   console.log("🚀 Server is running on port 3000!!!");
 });
+app.use(cors({
+  origin: 'http://localhost:5173', // your frontend URL
+  credentials: true // if you're using cookies or auth tokens
+}));
 
 // Routes
 app.get("/test", test);
