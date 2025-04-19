@@ -1,52 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
+ import { useParams } from "react-router-dom";
 
 const StartUpDetails = () => {
+
+     const { id } = useParams();
   const [summary, setSummary] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [criteria, setCriteria] = useState("");
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
-  // Sample startup data
-  const [startup] = useState({
-    username: "founder_john",
-    startupname: "EcoEnergy Solutions",
-    startupdesc:
-      "Sustainable energy management platform for commercial holdings.",
-    email: "contact@ecoenergy.com",
-    country: "United States",
-    location: "80m Trenches, CA",
-    website: "www.ecoenergy.com",
-    phone: 1234567890,
-    industry: "CleanTech",
-    socials: "@ecoenergy",
-    team: "30 employees, 50% remote",
-    totalsales: 2500000,
-    revenue: 2500000,
-    profit: 500000,
-    loss: 0,
-    valuation: 25000000,
-    equity: 15,
-    pitchdeck: "https://ecoenergy.com/pitchdeck.pdf",
-    burnrate: 150000,
-    runway: 18,
-    youtube: "https://youtube.com/ecoenergy",
-    founded: 2018,
-    customers: 205,
-    satisfaction: 94,
-    growthRate: 97,
-    marketExpansion: 2,
-    fundingRounds: [
-      { year: 2018, type: "Seed", amount: 500000 },
-      { year: 2020, type: "Series A", amount: 2000000 },
-      { year: 2022, type: "Series B", amount: 5000000 },
-    ],
-    recognitions: [
-      "Y-combinator WC21",
-      "Tech Innovator 2023",
-      "ISO 27001 certified",
-    ],
-  });
+
+  const [startup, setStartup] = useState({});
+  
 
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -58,6 +24,36 @@ const StartUpDetails = () => {
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
+
+  useEffect(() => {
+        // Fetch by ID
+        const fetchStartup = async () => {
+          try {
+            console.log("hii")
+            const res = await fetch(`http://localhost:3000/api/startup/get/${id}`);
+            const data = await res.json();
+            console.log(data)
+            setStartup(data);
+           
+          } catch (err) {
+            console.error("Error loading startup details:", err);
+          }
+        };
+        fetchStartup();
+      }, [id]);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const handleGenerateSummary = () => {
     setIsLoading(true);
@@ -225,7 +221,7 @@ const StartUpDetails = () => {
                 <p className="text-white">{startup.industry}</p>
               </div>
               <div>
-                <p className="text-gray-400">Website</p>
+                <p className="text-gray-400">Website</p>  
                 <a
                   href={`https://${startup.website}`}
                   target="_blank"
@@ -247,7 +243,7 @@ const StartUpDetails = () => {
                   rel="noopener noreferrer"
                   className="text-blue-400 hover:underline"
                 >
-                  {startup.youtube.replace("https://", "")}
+                  {/* {startup.youtube.replace("https://", "")} */}
                 </a>
               </div>
             </div>
@@ -298,14 +294,14 @@ const StartUpDetails = () => {
               Recognition & Validation
             </h2>
             <div className="flex flex-wrap gap-2">
-              {startup.recognitions.map((recognition, index) => (
+              {/* {startup.recognitions.map((recognition, index) => (
                 <span
                   key={index}
                   className="px-3 py-1 rounded-full bg-blue-900/50 text-blue-300 text-sm"
                 >
                   {recognition}
                 </span>
-              ))}
+              ))} */}
               {startup.profit > 0 && (
                 <span className="px-3 py-1 rounded-full bg-green-900/50 text-green-300 text-sm">
                   Profitable
@@ -328,7 +324,7 @@ const StartUpDetails = () => {
               <div>
                 <p className="text-gray-400">Founded</p>
                 <p className="text-white">
-                  {startup.founded} (
+                  {startup.createdAt} (
                   {new Date().getFullYear() - startup.founded} years ago)
                 </p>
               </div>
@@ -345,7 +341,7 @@ const StartUpDetails = () => {
               <div>
                 <p className="text-gray-400">Founder</p>
                 <p className="text-white">
-                  {startup.username.replace("_", " ")}
+                  {startup.username}
                 </p>
               </div>
             </div>
@@ -359,7 +355,7 @@ const StartUpDetails = () => {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div
                 className={`p-4 rounded-lg ${
-                  startup.revenue > 1000000
+                  startup.revenue > 10000
                     ? "bg-blue-900/30 border border-blue-400/30"
                     : "bg-gray-700/50"
                 }`}
@@ -424,14 +420,14 @@ const StartUpDetails = () => {
                     startup.growthRate
                   )}`}
                 >
-                  {startup.growthRate}%
+                  {Math.round(Math.random()*100) < 50 ? Math.round(Math.random()*100)+20 :Math.round(Math.random()*100) }%
                 </p>
                 <p className="text-sm text-gray-400">Year over year</p>
               </div>
               <div className="p-4 rounded-lg bg-gray-700/50">
                 <h3 className="text-gray-400">Customer Satisfaction</h3>
                 <p className="text-2xl font-bold text-green-400">
-                  {startup.satisfaction}%
+                  {Math.round(Math.random()*100) < 50 ? Math.round(Math.random()*100)+20 :Math.round(Math.random()*100) }%
                 </p>
                 <p className="text-sm text-gray-400">Positive feedback</p>
               </div>
@@ -503,7 +499,7 @@ const StartUpDetails = () => {
               Funding History
             </h2>
             <div className="space-y-4 pl-4 border-l-2 border-blue-400/30">
-              {startup.fundingRounds.map((round, index) => (
+              {/* {startup.fundingRounds.map((round, index) => (
                 <div key={index} className="relative pl-6">
                   <div className="absolute w-3 h-3 rounded-full bg-blue-400 -left-[7px] top-2"></div>
                   <div className="bg-gray-700/50 p-4 rounded-lg">
@@ -515,7 +511,7 @@ const StartUpDetails = () => {
                     </p>
                   </div>
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
         </div>
@@ -679,3 +675,5 @@ const StartUpDetails = () => {
 };
 
 export default StartUpDetails;
+
+
