@@ -4,10 +4,12 @@ const startupSchema = new mongoose.Schema(
     username: {
       type: String,
       required: true,
+      unique:true
     },
     startupname: {
       type: String,
       required: true,
+      unique: true,
     },
     startupdesc: {
       type: String,
@@ -16,6 +18,7 @@ const startupSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     country: {
       type: String,
@@ -32,6 +35,7 @@ const startupSchema = new mongoose.Schema(
     phone: {
       type: Number,
       required: true,
+      unique: true,
     },
     industry: {
       type: String,
@@ -40,6 +44,7 @@ const startupSchema = new mongoose.Schema(
     socials: {
       type: String,
       required: true,
+      unique: true,
     },
     team: {
       type: String,
@@ -96,6 +101,10 @@ const startupSchema = new mongoose.Schema(
     youtube: {
       type: String,
     },
+    isStartup:{
+      type:Boolean,
+      default:true
+    }
   },
   { timestamps: true }
 );
