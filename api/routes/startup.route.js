@@ -3,8 +3,7 @@ import { verifyToken } from '../utils/verifyUser.js';
 import {
   createStartup,
   deleteStartup,
-  getAllStartup,
-  getStartup,
+  
   updateStartup,
   getStartup,
   getAllStartup
