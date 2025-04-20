@@ -74,9 +74,7 @@ const SignIn = () => {
             required
             onChange={handleChange}
           />
-          <span className="forgot-password">
-            <a href="#">Forgot Password ?</a>
-          </span>
+        
           <button
             disabled={loading}
             type="submit"
