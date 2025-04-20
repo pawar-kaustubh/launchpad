@@ -38,7 +38,7 @@ const SignIn = () => {
         return;
       }
       dispatch(signInSuccess(data));
-      navigate("/login");
+      navigate("/usertype");
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
@@ -104,7 +104,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh; /* Full viewport height */
-  background: #eaf6ff; /* Optional: gives the background a nice look */
+  background: #9b8ec3; /* Optional: gives the background a nice look */
 
   .container {
     max-width: 350px;

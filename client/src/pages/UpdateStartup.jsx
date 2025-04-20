@@ -530,7 +530,7 @@ const UpdateStartup = () => {
     e.preventDefault();
 
     if (!currentUser?._id) {
-      navigate("/login");
+      navigate("/usertype");
       return;
     }
 

@@ -28,7 +28,7 @@ export default function App() {
 
         <Route path="/startupform" element={<StartUpForm />} />
         <Route path="/investorform" element={<InvestorForm />} />
-        <Route path="/login" element={<Login/>} />
+        <Route path="/usertype" element={<Login/>} />
         <Route path="/mentor" element={<StartupAnalysis/>} />
         <Route element={<PrivateRoute />}>
            <Route path='/profile' element={<Profile />} />

@@ -8,7 +8,7 @@ import {
 import { app } from "../firebase";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { current } from "@reduxjs/toolkit";
+
 
 const StartUpForm = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -548,7 +548,7 @@ const StartUpForm = () => {
     }
 
     if (!currentUser?._id) {
-      navigate("/login");
+      navigate("/usertype");
       return;
     }
 
