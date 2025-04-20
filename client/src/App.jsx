@@ -14,6 +14,8 @@ import InvestorForm from "./pages/InvestorForm";
 import UpdateStartup from "./pages/UpdateStartup";
 import StartupAnalysis from "./pages/MentorSection";
 import PublicRoute from "./components/PublicRoute";
+import Footer from "./components/Footer";
+import About from "./pages/About";
 
 export default function App() {
   return (
@@ -34,6 +36,8 @@ export default function App() {
         <Route path="/investorform" element={<InvestorForm />} />
         <Route path="/usertype" element={<Login />} />
         <Route path="/mentor" element={<StartupAnalysis />} />
+        <Route path="/footer" element={<Footer />} />
+        <Route path="/about" element={<About />} />
         
         {/* Private Route: Accessible only by authenticated users */}
         <Route element={<PrivateRoute />}>
@@ -42,6 +46,7 @@ export default function App() {
 
         <Route path="/startup/:startupId" element={<UpdateStartup />} />
       </Routes>
+      <Footer />
     </>
   );
 }
