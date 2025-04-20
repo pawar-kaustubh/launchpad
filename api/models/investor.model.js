@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { type } from "os";
+
 const investorSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -41,7 +41,7 @@ const investorSchema = new mongoose.Schema({
     required: true,
   },
   industriesinterested: {
-    type: String,
+    type: [String],
     required: true,
   },
   fundinstage: {
@@ -63,7 +63,7 @@ const investorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },companiesinvested:{
-    type: String,
+    type: [String],
     required: true,
   },isInvestor:{
     type:Boolean,

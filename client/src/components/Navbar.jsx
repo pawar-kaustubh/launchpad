@@ -28,7 +28,7 @@ const Navbar = () => {
         </svg>
         <Link to="/">
           <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-            LaunchPad
+           Ignite
           </span>
         </Link>
       </div>

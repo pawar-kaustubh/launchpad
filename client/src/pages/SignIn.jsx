@@ -74,9 +74,7 @@ const SignIn = () => {
             required
             onChange={handleChange}
           />
-          <span className="forgot-password">
-            <a href="#">Forgot Password ?</a>
-          </span>
+        
           <button
             disabled={loading}
             type="submit"
@@ -94,7 +92,7 @@ const SignIn = () => {
         <div>
           <span className="agreement">
             <p>Don't have an account</p>
-            <Link to={"/signup"}>Sign Up</Link>
+            <Link to={"/signup"}className="t">Sign Up</Link>
           </span>
         </div>
         {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
@@ -108,7 +106,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh; /* Full viewport height */
-  background: #9b8ec3; /* Optional: gives the background a nice look */
+  background:#EBF6FE; /* Optional: gives the background a nice look */
 
   .container {
     max-width: 350px;
