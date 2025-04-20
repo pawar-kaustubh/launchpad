@@ -106,7 +106,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh; /* Full viewport height */
-  background: #9b8ec3; /* Optional: gives the background a nice look */
+  background:#EBF6FE; /* Optional: gives the background a nice look */
 
   .container {
     max-width: 350px;

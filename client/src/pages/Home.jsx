@@ -16,7 +16,7 @@ const LaunchPad = () => {
 
   const testimonials = [
     {
-      quote: "LaunchPad helped us secure $2M in seed funding within 3 months!",
+      quote: "Ignite helped us secure $2M in seed funding within 3 months!",
       author: "Alex Chen",
       role: "Founder, TechNova",
       avatar: "https://randomuser.me/api/portraits/men/32.jpg",
@@ -29,8 +29,7 @@ const LaunchPad = () => {
       avatar: "https://randomuser.me/api/portraits/women/44.jpg",
     },
     {
-      quote:
-        "From pitch to funding in record time. LaunchPad delivers results.",
+      quote: "From pitch to funding in record time. Ignite delivers results.",
       author: "Miguel Rodriguez",
       role: "Co-founder, HealthTrack",
       avatar: "https://randomuser.me/api/portraits/men/75.jpg",
@@ -179,8 +178,7 @@ const LaunchPad = () => {
             <span className="animate-pulse text-white">|</span>
           </h1>
           <p className="text-2xl md:text-3xl text-gray-300 mb-12 max-w-3xl mx-auto font-body">
-            Launchpad empowers startups and investors with innovative
-            matchmaking
+            Ignite empowers startups and investors with innovative matchmaking
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <motion.button
@@ -461,7 +459,7 @@ const LaunchPad = () => {
             variants={fadeInUp}
           >
             <h2 className="text-4xl md:text-5xl font-display font-extrabold mb-6 text-white">
-              See LaunchPad in Action
+              See Ignite in Action
             </h2>
             <p className="text-xl text-gray-300 mb-8 font-body">
               Discover how we connect startups with investors in minutes
@@ -570,7 +568,7 @@ const LaunchPad = () => {
                   />
                 </svg>
                 <span className="text-3xl font-display font-bold text-white">
-                  LaunchPad
+                  Ignite
                 </span>
               </div>
               <p className="text-gray-500 font-body">
@@ -679,7 +677,7 @@ const LaunchPad = () => {
             variants={fadeInUp}
           >
             <p className="text-gray-500 mb-4 md:mb-0 font-body">
-              © 2025 LaunchPad. All rights reserved.
+              © 2025 Ignite. All rights reserved.
             </p>
             <div className="flex space-x-5">
               <a

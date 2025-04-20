@@ -4,6 +4,10 @@ import {
   createStartup,
   deleteStartup,
   
+  getAllStartup,
+  
+  getStartup,
+  
   updateStartup,
 
 } from '../controllers/startup.controller.js';
