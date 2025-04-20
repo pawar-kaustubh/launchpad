@@ -13,30 +13,34 @@ import PrivateRoute from "./components/PrivateRoute";
 import InvestorForm from "./pages/InvestorForm";
 import UpdateStartup from "./pages/UpdateStartup";
 import StartupAnalysis from "./pages/MentorSection";
-// import StartupDashboard from "./pages/StartupDashboard";
+import PublicRoute from "./components/PublicRoute";
 
 export default function App() {
   return (
     <>
-    <Navbar />
+      <Navbar />
       <Routes>
+        {/* Public Routes: Routes that are accessible when not logged in */}
+        <Route element={<PublicRoute />}>
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+        </Route>
+
+        {/* Protected Routes */}
         <Route path="/" element={<Home />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
         <Route path="/explorestartups" element={<ExploreStartUp />} />
         <Route path="/startupdetails/:id" element={<StartUpDetails />} />
-
         <Route path="/startupform" element={<StartUpForm />} />
         <Route path="/investorform" element={<InvestorForm />} />
-        <Route path="/usertype" element={<Login/>} />
-        <Route path="/mentor" element={<StartupAnalysis/>} />
+        <Route path="/usertype" element={<Login />} />
+        <Route path="/mentor" element={<StartupAnalysis />} />
+        
+        {/* Private Route: Accessible only by authenticated users */}
         <Route element={<PrivateRoute />}>
-           <Route path='/profile' element={<Profile />} />
-         </Route>
-         <Route
-             path='/startup/:startupId'
-             element={<UpdateStartup />}
-           />
+          <Route path="/profile" element={<Profile />} />
+        </Route>
+
+        <Route path="/startup/:startupId" element={<UpdateStartup />} />
       </Routes>
     </>
   );
