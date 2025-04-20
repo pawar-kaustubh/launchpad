@@ -94,7 +94,7 @@ const SignIn = () => {
         <div>
           <span className="agreement">
             <p>Don't have an account</p>
-            <Link to={"/signup"}>Sign Up</Link>
+            <Link to={"/signup"}className="t">Sign Up</Link>
           </span>
         </div>
         {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}

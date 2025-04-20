@@ -626,7 +626,7 @@ const StartUpForm = () => {
 
       setSubmitSuccess(true);
       setTimeout(() => {
-        navigate("/dashboard");
+        navigate("/");
       }, 3000);
     } catch (error) {
       console.error("Submission error:", error);
