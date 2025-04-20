@@ -1,19 +1,26 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   signInStart,
   signInSuccess,
   signInFailure,
+  clearError,
 } from "../redux/user/userSlice";
 import OAuth from "../components/OAuth";
+
 const SignIn = () => {
-  const [formData, setFormData] = React.useState({});
+  const [formData, setFormData] = useState({});
   const { loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  // ✅ Clear error on mount
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -38,7 +45,7 @@ const SignIn = () => {
         return;
       }
       dispatch(signInSuccess(data));
-      navigate("/login");
+      navigate("/usertype");
     } catch (error) {
       dispatch(signInFailure(error.message));
     }
@@ -47,7 +54,7 @@ const SignIn = () => {
   return (
     <StyledWrapper>
       <div className="container">
-        <div className="heading">Sign In</div>
+        <div className="heading text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Sign In</div>
         <form className="form" onSubmit={handleSubmit}>
           <input
             placeholder="E-mail"
@@ -67,14 +74,12 @@ const SignIn = () => {
             required
             onChange={handleChange}
           />
-
           <span className="forgot-password">
             <a href="#">Forgot Password ?</a>
           </span>
           <button
             disabled={loading}
             type="submit"
-            value="Sign Up"
             className="login-button"
           >
             {loading ? "Loading..." : "Sign In"}
@@ -86,11 +91,10 @@ const SignIn = () => {
             <OAuth />
           </div>
         </div>
-
         <div>
           <span className="agreement">
             <p>Don't have an account</p>
-            <Link to={"/signup"}>Sign Up</Link>
+            <Link to={"/signup"}className="t">Sign Up</Link>
           </span>
         </div>
         {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
@@ -104,7 +108,7 @@ const StyledWrapper = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh; /* Full viewport height */
-  background: #eaf6ff; /* Optional: gives the background a nice look */
+  background: #9b8ec3; /* Optional: gives the background a nice look */
 
   .container {
     max-width: 350px;
@@ -127,7 +131,7 @@ const StyledWrapper = styled.div`
     text-align: center;
     font-weight: 900;
     font-size: 30px;
-    color: rgb(16, 137, 211);
+   ;
   }
 
   .form {

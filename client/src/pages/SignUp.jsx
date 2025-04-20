@@ -1,13 +1,27 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { clearError } from "../redux/user/userSlice";
+
 const SignUp = () => {
-  const [formData, setFormData] = React.useState({});
+  const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { currentUser } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/");
+    }
+  }, [currentUser, navigate]);
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -17,39 +31,38 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true);
     try {
-      setLoading(true);
       const res = await fetch("/api/auth/signup", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
-      if (data.success === false) {
-        setLoading(false);
-        setError(data.message);
-        return;
+      if (!res.ok || data.success === false) {
+        throw new Error(data.message || "Sign up failed");
       }
-      setLoading(false);
-      setError(null);
+
       navigate("/signin");
-    } catch (error) {
+    } catch (err) {
+      setError(err.message);
+    } finally {
       setLoading(false);
-      setError(error.message);
     }
   };
 
   return (
     <StyledWrapper>
       <div className="container">
-        <div className="heading">Sign Up</div>
+        <div className="heading text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+          Sign Up
+        </div>
         <form className="form" onSubmit={handleSubmit}>
           <input
-            placeholder="username"
+            placeholder="Username"
             id="username"
-            name="username"
             type="text"
             className="input"
             required
@@ -58,7 +71,6 @@ const SignUp = () => {
           <input
             placeholder="E-mail"
             id="email"
-            name="email"
             type="email"
             className="input"
             required
@@ -67,38 +79,28 @@ const SignUp = () => {
           <input
             placeholder="Password"
             id="password"
-            name="password"
             type="password"
             className="input"
             required
             onChange={handleChange}
           />
-          <span className="forgot-password">
-            <a href="#">Forgot Password ?</a>
-          </span>
-          <button
-            disabled={loading}
-            type="submit"
-            value="Sign Up"
-            className="login-button"
-          >
+          <button disabled={loading} type="submit" className="login-button">
             {loading ? "Loading..." : "Sign Up"}
           </button>
         </form>
+
         <div className="social-account-container">
-          <div className="social-account-container">
-            <span className="title">Or Sign in with</span>
-            <div className="social-accounts">
-              <OAuth />
-            </div>
+          <span className="title">Or Sign in with</span>
+          <div className="social-accounts">
+            <OAuth />
           </div>
         </div>
-        <div>
-          <span className="agreement">
-            <p>Already have an account</p>
-            <Link to={"/signin"}>Sign In</Link>
-          </span>
+
+        <div className="agreement">
+          <p>Already have an account?</p>
+          <Link to="/signin">Sign In</Link>
         </div>
+
         {error && <p style={{ color: "red", textAlign: "center" }}>{error}</p>}
       </div>
     </StyledWrapper>
@@ -133,7 +135,6 @@ const StyledWrapper = styled.div`
     text-align: center;
     font-weight: 900;
     font-size: 30px;
-    color: rgb(16, 137, 211);
   }
 
   .form {

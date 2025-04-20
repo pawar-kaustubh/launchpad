@@ -22,13 +22,15 @@ const LaunchPad = () => {
       avatar: "https://randomuser.me/api/portraits/men/32.jpg",
     },
     {
-      quote: "The investor matching is incredible. Found our lead investor in 2 weeks.",
+      quote:
+        "The investor matching is incredible. Found our lead investor in 2 weeks.",
       author: "Sarah Johnson",
       role: "CEO, GreenSolutions",
       avatar: "https://randomuser.me/api/portraits/women/44.jpg",
     },
     {
-      quote: "From pitch to funding in record time. LaunchPad delivers results.",
+      quote:
+        "From pitch to funding in record time. LaunchPad delivers results.",
       author: "Miguel Rodriguez",
       role: "Co-founder, HealthTrack",
       avatar: "https://randomuser.me/api/portraits/men/75.jpg",
@@ -44,13 +46,13 @@ const LaunchPad = () => {
   // Scroll reveal animation variants
   const fadeInUp = {
     hidden: { opacity: 0, y: 60 },
-    visible: { 
-      opacity: 1, 
-      y: 0, 
-      transition: { 
-        duration: 0.8, 
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
         ease: [0.43, 0.13, 0.23, 0.96],
-      } 
+      },
     },
   };
 
@@ -114,7 +116,10 @@ const LaunchPad = () => {
 
       const animateCount = (timestamp) => {
         if (!startTime.current) startTime.current = timestamp;
-        const progress = Math.min((timestamp - startTime.current) / (duration * 1000), 1);
+        const progress = Math.min(
+          (timestamp - startTime.current) / (duration * 1000),
+          1
+        );
         setCount(Math.floor(progress * target));
         if (progress < 1) {
           requestAnimationFrame(animateCount);
@@ -124,7 +129,9 @@ const LaunchPad = () => {
       requestAnimationFrame(animateCount);
     }, [startCounters, target, duration]);
 
-    return <span className="text-5xl font-display">{count.toLocaleString()}+</span>;
+    return (
+      <span className="text-5xl font-display">{count.toLocaleString()}+</span>
+    );
   };
 
   return (
@@ -133,13 +140,27 @@ const LaunchPad = () => {
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div
           className="absolute rounded-full bg-gradient-to-br from-blue-400/40 to-purple-500/30 blur-[100px]"
-          style={{ width: "200px", height: "200px", x: mousePos.x, y: mousePos.y, translateX: "-50%", translateY: "-50%" }}
+          style={{
+            width: "200px",
+            height: "200px",
+            x: mousePos.x,
+            y: mousePos.y,
+            translateX: "-50%",
+            translateY: "-50%",
+          }}
           animate={{ scale: isHovering ? 1.2 : 1 }}
           transition={{ duration: 0.3 }}
         />
         <motion.div
           className="absolute rounded-full bg-gradient-to-br from-blue-500/30 to-purple-600/20 blur-[120px]"
-          style={{ width: "300px", height: "300px", x: mousePos.x, y: mousePos.y, translateX: "-50%", translateY: "-50%" }}
+          style={{
+            width: "300px",
+            height: "300px",
+            x: mousePos.x,
+            y: mousePos.y,
+            translateX: "-50%",
+            translateY: "-50%",
+          }}
           animate={{ scale: isHovering ? 1.3 : 1 }}
           transition={{ duration: 0.4 }}
         />
@@ -158,7 +179,8 @@ const LaunchPad = () => {
             <span className="animate-pulse text-white">|</span>
           </h1>
           <p className="text-2xl md:text-3xl text-gray-300 mb-12 max-w-3xl mx-auto font-body">
-            Launchpad empowers startups and investors with innovative matchmaking
+            Launchpad empowers startups and investors with innovative
+            matchmaking
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <motion.button
@@ -169,8 +191,18 @@ const LaunchPad = () => {
               onMouseLeave={() => setIsHovering(false)}
             >
               <span>Raise Funds</span>
-              <svg className="w-6 h-6 ml-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              <svg
+                className="w-6 h-6 ml-2 transition-transform"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14 5l7 7m0 0l-7 7m7-7H3"
+                />
               </svg>
             </motion.button>
             <motion.button
@@ -188,8 +220,18 @@ const LaunchPad = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.6 }}
         >
-          <svg className="w-10 h-10 text-blue-400 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          <svg
+            className="w-10 h-10 text-blue-400 animate-bounce"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 14l-7 7m0 0l-7-7m7 7V3"
+            />
           </svg>
         </motion.div>
       </section>
@@ -222,30 +264,63 @@ const LaunchPad = () => {
             {[
               {
                 icon: (
-                  <svg className="w-14 h-14 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                  <svg
+                    className="w-14 h-14 text-blue-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                    />
                   </svg>
                 ),
                 title: "Pitch Creation Suite",
-                description: "AI-powered tools to craft compelling pitches with real-time feedback",
+                description:
+                  "AI-powered tools to craft compelling pitches with real-time feedback",
               },
               {
                 icon: (
-                  <svg className="w-14 h-14 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  <svg
+                    className="w-14 h-14 text-purple-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
                   </svg>
                 ),
                 title: "Mentor Matching",
-                description: "Connect with industry experts for personalized feedback sessions",
+                description:
+                  "Connect with industry experts for personalized feedback sessions",
               },
               {
                 icon: (
-                  <svg className="w-14 h-14 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <svg
+                    className="w-14 h-14 text-blue-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                    />
                   </svg>
                 ),
                 title: "Engagement Analytics",
-                description: "Real-time dashboard to track investor interactions and feedback",
+                description:
+                  "Real-time dashboard to track investor interactions and feedback",
               },
             ].map((item, index) => (
               <motion.div
@@ -256,8 +331,12 @@ const LaunchPad = () => {
                 <div className="w-20 h-20 bg-gray-800/50 rounded-full flex items-center justify-center mb-6 mx-auto">
                   {item.icon}
                 </div>
-                <h3 className="text-2xl font-display font-bold mb-4 text-center text-white">{item.title}</h3>
-                <p className="text-gray-400 text-center font-body">{item.description}</p>
+                <h3 className="text-2xl font-display font-bold mb-4 text-center text-white">
+                  {item.title}
+                </h3>
+                <p className="text-gray-400 text-center font-body">
+                  {item.description}
+                </p>
               </motion.div>
             ))}
           </motion.div>
@@ -302,8 +381,12 @@ const LaunchPad = () => {
                     <blockquote className="text-2xl italic text-gray-200 mb-6 font-body">
                       "{testimonials[currentTestimonial].quote}"
                     </blockquote>
-                    <p className="font-semibold text-white font-display">{testimonials[currentTestimonial].author}</p>
-                    <p className="text-gray-400 font-body">{testimonials[currentTestimonial].role}</p>
+                    <p className="font-semibold text-white font-display">
+                      {testimonials[currentTestimonial].author}
+                    </p>
+                    <p className="text-gray-400 font-body">
+                      {testimonials[currentTestimonial].role}
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -313,7 +396,11 @@ const LaunchPad = () => {
                 <button
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${currentTestimonial === index ? "bg-blue-500 w-6" : "bg-gray-600"}`}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    currentTestimonial === index
+                      ? "bg-blue-500 w-6"
+                      : "bg-gray-600"
+                  }`}
                 />
               ))}
             </div>
@@ -355,7 +442,9 @@ const LaunchPad = () => {
                 <h3 className="text-5xl font-display font-extrabold text-blue-400 mb-4">
                   {metric.value}+
                 </h3>
-                <p className="text-gray-400 text-lg font-body">{metric.label}</p>
+                <p className="text-gray-400 text-lg font-body">
+                  {metric.label}
+                </p>
               </motion.div>
             ))}
           </motion.div>
@@ -398,7 +487,11 @@ const LaunchPad = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
-                <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <svg
+                  className="w-10 h-10 text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
                   <path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z" />
                 </svg>
               </motion.button>
@@ -423,7 +516,11 @@ const LaunchPad = () => {
           variants={fadeInUp}
         >
           <h2 className="text-5xl md:text-6xl font-display font-extrabold mb-8 text-white">
-            Ready to <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Launch</span> Your Vision?
+            Ready to{" "}
+            <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Launch
+            </span>{" "}
+            Your Vision?
           </h2>
           <p className="text-xl text-gray-300 mb-12 max-w-3xl mx-auto font-body">
             Join a thriving community of innovators shaping the future
@@ -459,35 +556,118 @@ const LaunchPad = () => {
           >
             <motion.div variants={fadeInUp}>
               <div className="flex items-center space-x-3 mb-4">
-                <svg className="w-10 h-10 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                <svg
+                  className="w-10 h-10 text-blue-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
                 </svg>
-                <span className="text-3xl font-display font-bold text-white">LaunchPad</span>
+                <span className="text-3xl font-display font-bold text-white">
+                  LaunchPad
+                </span>
               </div>
-              <p className="text-gray-500 font-body">Empowering the future of startups</p>
+              <p className="text-gray-500 font-body">
+                Empowering the future of startups
+              </p>
             </motion.div>
             <motion.div variants={fadeInUp}>
-              <h3 className="text-lg font-display font-semibold mb-4 text-white">For Startups</h3>
+              <h3 className="text-lg font-display font-semibold mb-4 text-white">
+                For Startups
+              </h3>
               <ul className="space-y-3">
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition font-body">Raise Funds</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition font-body">Pitch Tools</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition font-body">Mentorship</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-blue-400 transition font-body"
+                  >
+                    Raise Funds
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-blue-400 transition font-body"
+                  >
+                    Pitch Tools
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-blue-400 transition font-body"
+                  >
+                    Mentorship
+                  </a>
+                </li>
               </ul>
             </motion.div>
             <motion.div variants={fadeInUp}>
-              <h3 className="text-lg font-display font-semibold mb-4 text-white">For Investors</h3>
+              <h3 className="text-lg font-display font-semibold mb-4 text-white">
+                For Investors
+              </h3>
               <ul className="space-y-3">
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition font-body">Explore Startups</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition font-body">Deal Flow</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition font-body">Due Diligence</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-blue-400 transition font-body"
+                  >
+                    Explore Startups
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-blue-400 transition font-body"
+                  >
+                    Deal Flow
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-blue-400 transition font-body"
+                  >
+                    Due Diligence
+                  </a>
+                </li>
               </ul>
             </motion.div>
             <motion.div variants={fadeInUp}>
-              <h3 className="text-lg font-display font-semibold mb-4 text-white">Company</h3>
+              <h3 className="text-lg font-display font-semibold mb-4 text-white">
+                Company
+              </h3>
               <ul className="space-y-3">
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition font-body">About</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition font-body">Careers</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-blue-400 transition font-body">Contact</a></li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-blue-400 transition font-body"
+                  >
+                    About
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-blue-400 transition font-body"
+                  >
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-blue-400 transition font-body"
+                  >
+                    Contact
+                  </a>
+                </li>
               </ul>
             </motion.div>
           </motion.div>
@@ -498,20 +678,43 @@ const LaunchPad = () => {
             viewport={{ once: true, amount: 0.3 }}
             variants={fadeInUp}
           >
-            <p className="text-gray-500 mb-4 md:mb-0 font-body">© 2025 LaunchPad. All rights reserved.</p>
+            <p className="text-gray-500 mb-4 md:mb-0 font-body">
+              © 2025 LaunchPad. All rights reserved.
+            </p>
             <div className="flex space-x-5">
-              <a href="#" className="text-gray-400 hover:text-blue-400 transition">
-                <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-blue-400 transition"
+              >
+                <svg
+                  className="w-7 h-7"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z" />
                 </svg>
               </a>
-              <a href="#" className="text-gray-400 hover:text-blue-400 transition">
-                <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-blue-400 transition"
+              >
+                <svg
+                  className="w-7 h-7"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" />
                 </svg>
               </a>
-              <a href="#" className="text-gray-400 hover:text-blue-400 transition">
-                <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-blue-400 transition"
+              >
+                <svg
+                  className="w-7 h-7"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
                   <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z" />
                 </svg>
               </a>

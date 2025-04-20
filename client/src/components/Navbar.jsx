@@ -26,53 +26,54 @@ const Navbar = () => {
             d="M13 10V3L4 14h7v7l9-11h-7z"
           />
         </svg>
-        <Link  to="/">
-        <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-          LaunchPad
-        </span>
-
-        </Link> 
+        <Link to="/">
+          <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+            LaunchPad
+          </span>
+        </Link>
       </div>
 
       <div className="hidden md:flex space-x-8">
         <button
-          className={`px-4 py-2 rounded-full transition-all ${
+          className={`px-4 py-2 rounded-full transition-all text-white ${
             activeTab === "startups"
-              ? "bg-blue-600 text-white"
-              : "hover:text-blue-400"
+              ? "bg-blue-600"
+              : "bg-transparent border border-white"
           }`}
-          onClick={() => {setActiveTab("startups")
-            
+          onClick={() => {
+            setActiveTab("startups");
           }}
-         
         >
           Raise Funds
         </button>
         <button
-          className={`px-4 py-2 rounded-full transition-all ${
+          className={`px-4 py-2 rounded-full transition-all text-white ${
             activeTab === "investors"
-              ? "bg-blue-600 text-white"
-              : "hover:text-blue-400"
+              ? "bg-blue-600"
+              : "bg-transparent border border-white"
           }`}
           onClick={() => {
-            setActiveTab("investors")
-            navigate('/explorestartups')
+            setActiveTab("investors");
+            navigate("/explorestartups");
           }}
         >
           Explore Startups
         </button>
       </div>
 
-   
-      <Link to='/profile'>
-             {currentUser ? (
-               <img className='rounded-full h-7 w-7 object-cover' src={currentUser.avatar} alt='profile' />
-             ) : (
-              <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full hover:shadow-lg transition-all transform hover:scale-105">
-              Sign In
-            </button>
-             )}
-           </Link>
+      <Link to="/profile">
+        {currentUser ? (
+          <img
+            className="rounded-full h-7 w-7 object-cover"
+            src={currentUser.avatar}
+            alt="profile"
+          />
+        ) : (
+          <button className="px-6 py-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full hover:shadow-lg transition-all transform hover:scale-105">
+            Sign In
+          </button>
+        )}
+      </Link>
     </nav>
   );
 };
