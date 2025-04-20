@@ -32,6 +32,19 @@ export default function App() {
         <Route path="/startupdetails/:id" element={<StartUpDetails />} />
         <Route path="/startupform" element={<StartUpForm />} />
         <Route path="/investorform" element={<InvestorForm />} />
+
+        <Route path="/login" element={<Login/>} />
+        <Route path="/mentor" element={<StartupAnalysis/>} />
+
+        <Route element={<PrivateRoute />}>
+           <Route path='/profile' element={<Profile />} />
+         </Route>
+         
+         <Route
+             path='/startup/:startupId'
+             element={<UpdateStartup />}
+           />
+
         <Route path="/usertype" element={<Login />} />
         <Route path="/mentor" element={<StartupAnalysis />} />
         
@@ -41,6 +54,7 @@ export default function App() {
         </Route>
 
         <Route path="/startup/:startupId" element={<UpdateStartup />} />
+
       </Routes>
     </>
   );
