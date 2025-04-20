@@ -3,11 +3,18 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import OAuth from "../components/OAuth";
+import { clearError } from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
 const SignUp = () => {
   const [formData, setFormData] = React.useState({});
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -44,7 +51,9 @@ const SignUp = () => {
   return (
     <StyledWrapper>
       <div className="container">
-        <div className="heading">Sign Up</div>
+        <div className="heading text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+          Sign Up
+        </div>
         <form className="form" onSubmit={handleSubmit}>
           <input
             placeholder="username"
@@ -133,7 +142,6 @@ const StyledWrapper = styled.div`
     text-align: center;
     font-weight: 900;
     font-size: 30px;
-    color: rgb(16, 137, 211);
   }
 
   .form {
